@@ -19,3 +19,6 @@ dist/
 
 # appsscript binding
 .clasp.json
+
+# already pushed version for ...add scriptId here...
+.clasp.json.EXAMPLE
