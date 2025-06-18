@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    @apply bg-dark px-8 py-4 text-xs
+}
+
+h1 {
+    @apply text-2xl
+}
+
+h2 {
+    @apply text-xl
+}
+
+sub {
+    @apply text-xs
+}
