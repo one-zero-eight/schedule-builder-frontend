@@ -8,6 +8,6 @@ export const onOpen = () => {
 
 export const openPlugin = () => {
   const html = HtmlService.createHtmlOutputFromFile('plugin');
-  html.setTitle("Plugin v0")
+  html.setTitle("Schedule conflict resolver")
   SpreadsheetApp.getUi().showSidebar(html);
 };

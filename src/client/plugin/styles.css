@@ -8,8 +8,19 @@
     box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#index {
+  min-height: 100vh;
+  height: 100%;
+  @apply px-8 py-4
+}
+
 body {
-    @apply bg-dark px-8 py-4 text-xs
+    @apply bg-dark text-xs min-h-screen
 }
 
 h1 {
@@ -20,6 +31,14 @@ h2 {
     @apply text-xl
 }
 
+h3 {
+    @apply text-lg
+}
+
 sub {
     @apply text-xs
+}
+
+section#index {
+    @apply min-h-full
 }

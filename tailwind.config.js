@@ -7,6 +7,9 @@ module.exports = {
         subtle: '#737171',
         highlight: '#6EC7F4',
       },
+      fontFamily: {
+        sans: ['Manrope', 'sans-serif']
+      }
     },
   },
   variants: {

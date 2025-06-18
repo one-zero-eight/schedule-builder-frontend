@@ -1,10 +1,22 @@
 // This is an example card without any meaningful info
+import { formatTimeForMoscow } from "../../lib/utils"
 
-export default function LessonCard() {
-  <div className="bg-dark border border-innohassle w-fit text-center p-3 rounded-md *:select-all">
-    <p className="text-highlight">Software Project</p>
-    <p>CSE-04</p>
-    <p className="text-highlight">Mahmoud Naderi</p>
-    <p>11:10</p>
-  </div>;
+interface LessonCardProps {
+  teacher: string,
+  group_name: string | null,
+  room: string,
+  start: string
+}
+
+export default function LessonCard(props: LessonCardProps) {
+  const timeString = formatTimeForMoscow(props.start)
+
+  return (
+    <div className="bg-dark border border-innohassle w-fit text-center p-3 rounded-md *:select-all">
+      <p className="text-highlight">Backend forgot to send lesson name ;)</p>
+      {props.group_name && <p>{props.group_name}</p>}
+      <p className="text-highlight">{props.teacher || "No teacher"}</p>
+      <p>{timeString} - {props.room}</p>
+    </div>
+  );
 }
