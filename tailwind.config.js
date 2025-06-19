@@ -1,6 +1,16 @@
 module.exports = {
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        dark: '#242424',
+        innohassle: '#9747FF',
+        subtle: '#737171',
+        highlight: '#6EC7F4',
+      },
+      fontFamily: {
+        sans: ['Manrope', 'sans-serif']
+      }
+    },
   },
   variants: {
     extend: {},
