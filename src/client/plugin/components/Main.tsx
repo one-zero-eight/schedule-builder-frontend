@@ -1,17 +1,31 @@
-import Card from './ConflictCard';
-
-import { Collisions, ConflictType } from '../../lib/types';
 import { useState } from 'react';
 import { getAllCollisions } from '../../lib/apis';
-import innohassleSvg from "../innohassle.svg"
+import { Collisions, ConflictType } from '../../lib/types';
+import {
+  filterConflicts,
+  getActiveFilterLabel,
+  getFilterOptions,
+} from '../../utils/filterUtils';
+import innohassleSvg from '../innohassle.svg';
+import Card from './ConflictCard';
 
 export default function Main() {
-  const currentYear: number = new Date().getFullYear()
-  const [ conflicts, setConflicts ] = useState<Collisions>({rooms: [], teachers: []})
-  const totalIssues = conflicts.rooms.length + conflicts.teachers.length
+  const currentYear: number = new Date().getFullYear();
+  const [conflicts, setConflicts] = useState<Collisions>({
+    rooms: [],
+    teachers: [],
+  });
+  const [activeFilter, setActiveFilter] = useState<ConflictType | 'all'>('all');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const totalIssues = conflicts.rooms.length + conflicts.teachers.length;
+  const filterOptions = getFilterOptions(conflicts);
+  const filteredConflicts = filterConflicts(conflicts, activeFilter);
+  const filteredTotalIssues =
+    filteredConflicts.rooms.length + filteredConflicts.teachers.length;
 
   async function getConflicts() {
-    setConflicts(await getAllCollisions())
+    setConflicts(await getAllCollisions());
   }
 
   return (
@@ -30,18 +44,109 @@ export default function Main() {
         Check the scheduling
       </button>
 
-      {totalIssues > 0 && <h3 className="font-semibold">Number of issues: {totalIssues}</h3>}
+      {totalIssues > 0 && (
+        <>
+          <h3 className="font-semibold">Number of issues: {totalIssues}</h3>
+
+          {/* Custom Filter Selector */}
+          <div className="flex justify-center">
+            <div className="relative">
+              <div className="p-0.5 bg-gradient-to-b from-[#8C35F6] to-[#5C20A6] rounded-lg">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="p-4 bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:brightness-110 transition-all"
+                >
+                  <span>
+                    {getActiveFilterLabel(activeFilter, filterOptions)}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      isDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 right-0 mt-1 p-0.5 bg-gradient-to-b from-[#8C35F6] to-[#5C20A6] rounded-lg z-10">
+                  <div className="bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] overflow-hidden">
+                    {filterOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => {
+                          setActiveFilter(option.value as ConflictType | 'all');
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
+                          activeFilter === option.value
+                            ? 'bg-innohassle text-white'
+                            : 'text-white'
+                        }`}
+                      >
+                        {option.label} ({option.count})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {activeFilter !== 'all' && (
+            <p className="text-sm text-subtle">
+              Showing {filteredTotalIssues} of {totalIssues} issues
+            </p>
+          )}
+        </>
+      )}
+
       <div className="flex flex-col gap-3">
-        {conflicts.rooms.map(data => <Card conflictType={ConflictType.roomConflict} lesson={data} />)}
-        {conflicts.teachers.map(data => <Card conflictType={ConflictType.teacherConflict} lesson={data} />)}
+        {filteredConflicts.rooms.map((data, index) => (
+          <Card
+            key={`room-${index}`}
+            conflictType={ConflictType.roomConflict}
+            lesson={data}
+          />
+        ))}
+        {filteredConflicts.teachers.map((data, index) => (
+          <Card
+            key={`teacher-${index}`}
+            conflictType={ConflictType.teacherConflict}
+            lesson={data}
+          />
+        ))}
       </div>
 
+      {totalIssues > 0 && filteredTotalIssues === 0 && (
+        <p className="text-subtle text-center py-4">
+          No issues match the selected filter.
+        </p>
+      )}
+
       <footer className="flex flex-col items-center mt-auto select-none">
-        <a href="https://innohassle.ru" target='_blank'>
-          <img src={innohassleSvg} width={48} height={48} alt="innohassle-logo" />
+        <a href="https://innohassle.ru" target="_blank">
+          <img
+            src={innohassleSvg}
+            width={48}
+            height={48}
+            alt="innohassle-logo"
+          />
         </a>
         <p className="mt-2">Schedule conflict resolver</p>
-        <p>Project created for <span className="text-innohassle">Software Project 2025</span> course</p>
+        <p>
+          Project created for{' '}
+          <span className="text-innohassle">Software Project 2025</span> course
+        </p>
         <p className="mt-2 text-subtle">Copyright © {currentYear}</p>
       </footer>
     </main>
