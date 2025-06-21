@@ -8,6 +8,8 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
+import { hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
+import { serverFunctions } from '../../lib/serverFunctions';
 
 export default function Main() {
   const currentYear: number = new Date().getFullYear();
@@ -21,7 +23,9 @@ export default function Main() {
   const filteredTotalIssues = filteredConflicts.length;
 
   async function getConflicts() {
-    setConflicts(await getAllCollisions());
+    const spreadsheetID = await serverFunctions.getSpreadsheetID();
+    const conflicts = await getAllCollisions(spreadsheetID, token);
+    setConflicts(conflicts);
   }
 
   return (
