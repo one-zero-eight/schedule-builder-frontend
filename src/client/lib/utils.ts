@@ -1,3 +1,5 @@
+import { CollisionType } from "./types";
+
 export function formatTimeForMoscow(timeString: string): string {
   // Accepts time strings like: "17:33:22.719Z" and converts them to more concise time in Moscow timezone: "20:33"
 
@@ -19,6 +21,21 @@ export function formatTimeForMoscow(timeString: string): string {
   return `${hours}:${minutes}`;
 }
 
+export function collisionTypeToDisplayText(type: CollisionType): string {
+  switch (type) {
+    case CollisionType.CAPACITY:
+      return "Capacity exceeded"
+    case CollisionType.ROOM:
+      return "The room is taken"
+    case CollisionType.TEACHER:
+      return "The teacher is busy"
+    default:
+      return "Unknown collision"
+  }
+}
+
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+

@@ -12,3 +12,8 @@ export function getSpreadsheetID(): string {
     const id = extractGoogleSheetsId(fullUrl);
     return id;
 }
+
+export function selectTheRangeForUser(range: string) {
+  const rangeObject = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getRange(range);
+  rangeObject.activate()
+}

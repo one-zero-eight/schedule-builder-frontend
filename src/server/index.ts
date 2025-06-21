@@ -6,6 +6,7 @@ import {
 import {
   fillE2FieldWith,
   getSpreadsheetID,
+  selectTheRangeForUser
 } from "./custom"
 
 // Public functions must be exported as named exports
@@ -16,4 +17,5 @@ export {
   openPlugin,
   fillE2FieldWith,
   getSpreadsheetID,
+  selectTheRangeForUser
 };

@@ -18,7 +18,7 @@ export default function Main() {
   const totalIssues = conflicts.length
   const filterOptions = getFilterOptions(conflicts);
   const filteredConflicts = filterConflicts(conflicts, activeFilter);
-  const filteredTotalIssues = filterConflicts.length;
+  const filteredTotalIssues = filteredConflicts.length;
 
   async function getConflicts() {
     setConflicts(await getAllCollisions());
