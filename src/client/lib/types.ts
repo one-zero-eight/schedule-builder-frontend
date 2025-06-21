@@ -1,23 +1,25 @@
+export enum CollisionType {
+  ROOM = "room",
+  TEACHER = "teacher",
+  CAPACITY = "capacity",
+}
+
 export type LessonSlot = {
+  lesson_name: string;
   weekday: string;
-  start: string;
-  end: string;
+  start_time: string;
+  end_time: string;
   room: string;
   teacher: string;
   group_name: string | null;
+  students_number: number;
+  excel_range: string;
 };
+
+export type LessonSlotWithCollision = LessonSlot & { collision_type: CollisionType }
 
 export type LessonSlotWithCollisions = LessonSlot & {
-  collisions: LessonSlot[];
+  collisions: LessonSlotWithCollision[];
 };
 
-export type Collisions = {
-  rooms: LessonSlotWithCollisions[];
-  teachers: LessonSlotWithCollisions[];
-};
-
-
-export enum ConflictType {
-  roomConflict = "Room conflict",
-  teacherConflict = "Teacher conflict",
-}
+export type Collisions = (LessonSlotWithCollision | LessonSlotWithCollisions)[]

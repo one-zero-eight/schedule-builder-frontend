@@ -1,228 +1,205 @@
-import { type Collisions } from "./types";
+import { type Collisions, CollisionType } from "./types";
 
-export const collisionTestData: Collisions = {
-    rooms: [
-        {
-            weekday: "Monday",
-            start: "08:30:00.000Z",
-            end: "10:05:00.000Z",
-            room: "A101",
-            teacher: "Dr. Smith",
-            group_name: "CS-101",
-            collisions: [
-                {
-                    weekday: "Monday",
-                    start: "09:00:00.000Z",
-                    end: "10:30:00.000Z",
-                    room: "A101",
-                    teacher: "Prof. Johnson",
-                    group_name: "MATH-202"
-                },
-                {
-                    weekday: "Monday",
-                    start: "08:45:00.000Z",
-                    end: "10:15:00.000Z",
-                    room: "A101",
-                    teacher: "Dr. Lee",
-                    group_name: "PHYS-105"
-                }
-            ]
-        },
-        {
-            weekday: "Tuesday",
-            start: "13:00:00.000Z",
-            end: "14:35:00.000Z",
-            room: "B205",
-            teacher: "Prof. Brown",
-            group_name: "ENG-210",
-            collisions: [
-                {
-                    weekday: "Tuesday",
-                    start: "13:30:00.000Z",
-                    end: "15:00:00.000Z",
-                    room: "B205",
-                    teacher: "Dr. Wilson",
-                    group_name: "CHEM-115"
-                }
-            ]
-        },
-        {
-            weekday: "Wednesday",
-            start: "10:15:00.000Z",
-            end: "11:50:00.000Z",
-            room: "C304",
-            teacher: "Dr. Garcia",
-            group_name: "BIO-150",
-            collisions: [
-                {
-                    weekday: "Wednesday",
-                    start: "10:00:00.000Z",
-                    end: "11:30:00.000Z",
-                    room: "C304",
-                    teacher: "Prof. Taylor",
-                    group_name: "HIST-101"
-                },
-                {
-                    weekday: "Wednesday",
-                    start: "11:00:00.000Z",
-                    end: "12:30:00.000Z",
-                    room: "C304",
-                    teacher: "Dr. Martinez",
-                    group_name: "ART-220"
-                }
-            ]
-        },
-        {
-            weekday: "Thursday",
-            start: "15:00:00.000Z",
-            end: "16:35:00.000Z",
-            room: "D412",
-            teacher: "Prof. Anderson",
-            group_name: "ECON-300",
-            collisions: [
-                {
-                    weekday: "Thursday",
-                    start: "15:30:00.000Z",
-                    end: "17:00:00.000Z",
-                    room: "D412",
-                    teacher: "Dr. White",
-                    group_name: "PHIL-201"
-                }
-            ]
-        },
-        {
-            weekday: "Friday",
-            start: "11:20:00.000Z",
-            end: "12:55:00.000Z",
-            room: "E109",
-            teacher: "Dr. Harris",
-            group_name: "PSYCH-180",
-            collisions: [
-                {
-                    weekday: "Friday",
-                    start: "11:00:00.000Z",
-                    end: "12:30:00.000Z",
-                    room: "E109",
-                    teacher: "Prof. Clark",
-                    group_name: "SOC-210"
-                },
-                {
-                    weekday: "Friday",
-                    start: "12:00:00.000Z",
-                    end: "13:30:00.000Z",
-                    room: "E109",
-                    teacher: "Dr. Lewis",
-                    group_name: "MUSIC-110"
-                }
-            ]
-        }
-    ],
-    teachers: [
-        {
-            weekday: "Monday",
-            start: "09:00:00.000Z",
-            end: "10:30:00.000Z",
-            room: "A101",
-            teacher: "Prof. Johnson",
-            group_name: "MATH-202",
-            collisions: [
-                {
-                    weekday: "Monday",
-                    start: "08:30:00.000Z",
-                    end: "10:05:00.000Z",
-                    room: "A101",
-                    teacher: "Dr. Smith",
-                    group_name: "CS-101"
-                }
-            ]
-        },
-        {
-            weekday: "Tuesday",
-            start: "13:30:00.000Z",
-            end: "15:00:00.000Z",
-            room: "B205",
-            teacher: "Dr. Wilson",
-            group_name: "CHEM-115",
-            collisions: [
-                {
-                    weekday: "Tuesday",
-                    start: "13:00:00.000Z",
-                    end: "14:35:00.000Z",
-                    room: "B205",
-                    teacher: "Prof. Brown",
-                    group_name: "ENG-210"
-                },
-                {
-                    weekday: "Tuesday",
-                    start: "14:00:00.000Z",
-                    end: "15:30:00.000Z",
-                    room: "B207",
-                    teacher: "Dr. Wilson",
-                    group_name: "CHEM-115-Lab"
-                }
-            ]
-        },
-        {
-            weekday: "Wednesday",
-            start: "10:00:00.000Z",
-            end: "11:30:00.000Z",
-            room: "C304",
-            teacher: "Prof. Taylor",
-            group_name: "HIST-101",
-            collisions: [
-                {
-                    weekday: "Wednesday",
-                    start: "10:15:00.000Z",
-                    end: "11:50:00.000Z",
-                    room: "C304",
-                    teacher: "Dr. Garcia",
-                    group_name: "BIO-150"
-                }
-            ]
-        },
-        {
-            weekday: "Thursday",
-            start: "15:30:00.000Z",
-            end: "17:00:00.000Z",
-            room: "D412",
-            teacher: "Dr. White",
-            group_name: "PHIL-201",
-            collisions: [
-                {
-                    weekday: "Thursday",
-                    start: "15:00:00.000Z",
-                    end: "16:35:00.000Z",
-                    room: "D412",
-                    teacher: "Prof. Anderson",
-                    group_name: "ECON-300"
-                }
-            ]
-        },
-        {
-            weekday: "Friday",
-            start: "11:00:00.000Z",
-            end: "12:30:00.000Z",
-            room: "E109",
-            teacher: "Prof. Clark",
-            group_name: "SOC-210",
-            collisions: [
-                {
-                    weekday: "Friday",
-                    start: "11:20:00.000Z",
-                    end: "12:55:00.000Z",
-                    room: "E109",
-                    teacher: "Dr. Harris",
-                    group_name: "PSYCH-180"
-                },
-                {
-                    weekday: "Friday",
-                    start: "12:00:00.000Z",
-                    end: "13:30:00.000Z",
-                    room: "E109",
-                    teacher: "Dr. Lewis",
-                    group_name: "MUSIC-110"
-                }
-            ]
-        }
+export const collisionTestData: Collisions = [
+  // Room conflicts (4 slots)
+  {
+    lesson_name: "Math 101",
+    weekday: "Monday",
+    start_time: "09:00",
+    end_time: "10:30",
+    room: "Room A",
+    teacher: "Prof. Smith",
+    group_name: "Group 1",
+    students_number: 25,
+    excel_range: "A1:B2",
+    collisions: [
+      {
+        lesson_name: "Physics 101",
+        weekday: "Monday",
+        start_time: "09:00",
+        end_time: "10:30",
+        room: "Room A",
+        teacher: "Prof. Johnson",
+        group_name: "Group 2",
+        students_number: 30,
+        excel_range: "C1:D2",
+        collision_type: CollisionType.ROOM
+      },
+      {
+        lesson_name: "Chemistry 101",
+        weekday: "Monday",
+        start_time: "09:00",
+        end_time: "10:30",
+        room: "Room A",
+        teacher: "Prof. Williams",
+        group_name: "Group 3",
+        students_number: 20,
+        excel_range: "E1:F2",
+        collision_type: CollisionType.ROOM
+      }
     ]
-};
+  },
+  {
+    lesson_name: "Physics 101",
+    weekday: "Monday",
+    start_time: "09:00",
+    end_time: "10:30",
+    room: "Room A",
+    teacher: "Prof. Johnson",
+    group_name: "Group 2",
+    students_number: 30,
+    excel_range: "C1:D2",
+    collision_type: CollisionType.ROOM
+  },
+  {
+    lesson_name: "Biology 101",
+    weekday: "Tuesday",
+    start_time: "11:00",
+    end_time: "12:30",
+    room: "Room B",
+    teacher: "Prof. Brown",
+    group_name: "Group 4",
+    students_number: 25,
+    excel_range: "G1:H2",
+    collisions: [
+      {
+        lesson_name: "History 101",
+        weekday: "Tuesday",
+        start_time: "11:00",
+        end_time: "12:30",
+        room: "Room B",
+        teacher: "Prof. Davis",
+        group_name: "Group 5",
+        students_number: 30,
+        excel_range: "I1:J2",
+        collision_type: CollisionType.ROOM
+      }
+    ]
+  },
+  {
+    lesson_name: "History 101",
+    weekday: "Tuesday",
+    start_time: "11:00",
+    end_time: "12:30",
+    room: "Room B",
+    teacher: "Prof. Davis",
+    group_name: "Group 5",
+    students_number: 30,
+    excel_range: "I1:J2",
+    collision_type: CollisionType.ROOM
+  },
+
+  // Teacher conflicts (4 slots)
+  {
+    lesson_name: "English 101",
+    weekday: "Wednesday",
+    start_time: "13:00",
+    end_time: "14:30",
+    room: "Room C",
+    teacher: "Prof. Wilson",
+    group_name: "Group 6",
+    students_number: 20,
+    excel_range: "K1:L2",
+    collisions: [
+      {
+        lesson_name: "Art 101",
+        weekday: "Wednesday",
+        start_time: "13:00",
+        end_time: "14:30",
+        room: "Room D",
+        teacher: "Prof. Wilson",
+        group_name: "Group 7",
+        students_number: 15,
+        excel_range: "M1:N2",
+        collision_type: CollisionType.TEACHER
+      },
+      {
+        lesson_name: "Music 101",
+        weekday: "Wednesday",
+        start_time: "13:00",
+        end_time: "14:30",
+        room: "Room E",
+        teacher: "Prof. Wilson",
+        group_name: "Group 8",
+        students_number: 10,
+        excel_range: "O1:P2",
+        collision_type: CollisionType.TEACHER
+      }
+    ]
+  },
+  {
+    lesson_name: "Art 101",
+    weekday: "Wednesday",
+    start_time: "13:00",
+    end_time: "14:30",
+    room: "Room D",
+    teacher: "Prof. Wilson",
+    group_name: "Group 7",
+    students_number: 15,
+    excel_range: "M1:N2",
+    collision_type: CollisionType.TEACHER
+  },
+  {
+    lesson_name: "Geography 101",
+    weekday: "Thursday",
+    start_time: "15:00",
+    end_time: "16:30",
+    room: "Room F",
+    teacher: "Prof. Taylor",
+    group_name: "Group 9",
+    students_number: 25,
+    excel_range: "Q1:R2",
+    collisions: [
+      {
+        lesson_name: "PE 101",
+        weekday: "Thursday",
+        start_time: "15:00",
+        end_time: "16:30",
+        room: "Room G",
+        teacher: "Prof. Taylor",
+        group_name: "Group 10",
+        students_number: 30,
+        excel_range: "S1:T2",
+        collision_type: CollisionType.TEACHER
+      }
+    ]
+  },
+  {
+    lesson_name: "PE 101",
+    weekday: "Thursday",
+    start_time: "15:00",
+    end_time: "16:30",
+    room: "Room G",
+    teacher: "Prof. Taylor",
+    group_name: "Group 10",
+    students_number: 30,
+    excel_range: "S1:T2",
+    collision_type: CollisionType.TEACHER
+  },
+
+  // Capacity conflicts (2 slots)
+  {
+    lesson_name: "Computer Science 101",
+    weekday: "Friday",
+    start_time: "10:00",
+    end_time: "11:30",
+    room: "Room H",
+    teacher: "Prof. Anderson",
+    group_name: "Group 11",
+    students_number: 35,
+    excel_range: "U1:V2",
+    collision_type: CollisionType.CAPACITY
+  },
+  {
+    lesson_name: "Data Science 101",
+    weekday: "Friday",
+    start_time: "10:00",
+    end_time: "11:30",
+    room: "Room H",
+    teacher: "Prof. Anderson",
+    group_name: "Group 12",
+    students_number: 30,
+    excel_range: "W1:X2",
+    collision_type: CollisionType.CAPACITY
+  }
+];
