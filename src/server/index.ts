@@ -4,7 +4,9 @@ import {
 } from './ui';
 
 import {
-  fillE2FieldWith
+  fillE2FieldWith,
+  getSpreadsheetID,
+  selectTheRangeForUser
 } from "./custom"
 
 // Public functions must be exported as named exports
@@ -13,5 +15,7 @@ import {
 export {
   onOpen,
   openPlugin,
-  fillE2FieldWith
+  fillE2FieldWith,
+  getSpreadsheetID,
+  selectTheRangeForUser
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getAllCollisions } from '../../lib/apis';
-import { Collisions, ConflictType } from '../../lib/types';
+import { Collisions, CollisionType } from '../../lib/types';
 import {
   filterConflicts,
   getActiveFilterLabel,
@@ -8,30 +8,30 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
+import { hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
+import { serverFunctions } from '../../lib/serverFunctions';
 
 export default function Main() {
   const currentYear: number = new Date().getFullYear();
-  const [conflicts, setConflicts] = useState<Collisions>({
-    rooms: [],
-    teachers: [],
-  });
-  const [activeFilter, setActiveFilter] = useState<ConflictType | 'all'>('all');
+  const [conflicts, setConflicts] = useState<Collisions>([]);
+  const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const totalIssues = conflicts.rooms.length + conflicts.teachers.length;
+  const totalIssues = conflicts.length
   const filterOptions = getFilterOptions(conflicts);
   const filteredConflicts = filterConflicts(conflicts, activeFilter);
-  const filteredTotalIssues =
-    filteredConflicts.rooms.length + filteredConflicts.teachers.length;
+  const filteredTotalIssues = filteredConflicts.length;
 
   async function getConflicts() {
-    setConflicts(await getAllCollisions());
+    const spreadsheetID = await serverFunctions.getSpreadsheetID();
+    const conflicts = await getAllCollisions(spreadsheetID, token);
+    setConflicts(conflicts);
   }
 
   return (
     <main className="text-center text-white flex flex-col gap-3 h-full">
       <h1>
-        InNo<span className="text-innohassle">Hassle</span> SCR
+        Inno<span className="text-innohassle">Hassle</span> SCR
       </h1>
       <p>
         To test the compatibility of a schedule draft, select the required sheet
@@ -84,7 +84,7 @@ export default function Main() {
                       <button
                         key={option.value}
                         onClick={() => {
-                          setActiveFilter(option.value as ConflictType | 'all');
+                          setActiveFilter(option.value as CollisionType | 'all');
                           setIsDropdownOpen(false);
                         }}
                         className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
@@ -111,7 +111,18 @@ export default function Main() {
       )}
 
       <div className="flex flex-col gap-3">
-        {filteredConflicts.rooms.map((data, index) => (
+        {filteredConflicts.map((data, index) => (
+          <Card key={index} lesson={data}/>
+        ))}
+
+        {/* {filteredConflicts.map((data, index) => (
+          <Card
+            key={index}
+            conflictType={data.}
+          />
+        ))} */}
+
+        {/* {filteredConflicts.rooms.map((data, index) => (
           <Card
             key={`room-${index}`}
             conflictType={ConflictType.roomConflict}
@@ -124,7 +135,7 @@ export default function Main() {
             conflictType={ConflictType.teacherConflict}
             lesson={data}
           />
-        ))}
+        ))} */}
       </div>
 
       {totalIssues > 0 && filteredTotalIssues === 0 && (

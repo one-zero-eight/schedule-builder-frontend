@@ -1,41 +1,53 @@
-import { Collisions, ConflictType } from '../lib/types';
+import { Collisions, CollisionType } from '../lib/types';
 
 export const filterConflicts = (
   conflicts: Collisions,
-  activeFilter: ConflictType | 'all'
+  activeFilter: CollisionType | 'all'
 ): Collisions => {
-  return {
-    rooms:
-      activeFilter === 'all' || activeFilter === ConflictType.roomConflict
-        ? conflicts.rooms
-        : [],
-    teachers:
-      activeFilter === 'all' || activeFilter === ConflictType.teacherConflict
-        ? conflicts.teachers
-        : [],
-  };
+  if (activeFilter == "all") return conflicts
+
+  return conflicts.filter(obj => {
+    if ("collisions" in obj) {
+      // Slot with multiple collisions
+      for (const slot of obj.collisions) {
+        // If any of conflicting slots have filtered conflict type, then we display all
+        if (slot.collision_type == activeFilter) {
+          return true
+        }
+      }
+
+    } else {
+      // Slot with just one collision reason
+      return obj.collision_type == activeFilter
+    }
+  })
 };
 
 export const getFilterOptions = (conflicts: Collisions) => {
-  const totalIssues = conflicts.rooms.length + conflicts.teachers.length;
+  const totalIssues = conflicts.length
 
   return [
     { value: 'all', label: 'All Issues', count: totalIssues },
     {
-      value: ConflictType.roomConflict,
+      value: CollisionType.ROOM,
       label: 'Room Conflicts',
-      count: conflicts.rooms.length,
+      count: 0, // hard to compute
     },
     {
-      value: ConflictType.teacherConflict,
+      value: CollisionType.TEACHER,
       label: 'Teacher Conflicts',
-      count: conflicts.teachers.length,
+      count: 0, // should we even compute this in options?
     },
+    {
+      value: CollisionType.CAPACITY,
+      label: 'Capacity Conflicts',
+      count: 0,
+    }
   ];
 };
 
 export const getActiveFilterLabel = (
-  activeFilter: ConflictType | 'all',
+  activeFilter: CollisionType | 'all',
   filterOptions: ReturnType<typeof getFilterOptions>
 ) => {
   const option = filterOptions.find((opt) => opt.value === activeFilter);
