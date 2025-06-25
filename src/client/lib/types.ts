@@ -42,5 +42,10 @@ export type Conflict = CapacityConflict | TeacherConflict | RoomConflict | Outlo
 
 export type ConflictResponse = Conflict[][]
 
-
-
+export type APIResponse<Payload> = {
+  success: true,
+  payload: Payload
+}  | {
+  success: false,
+  error: string
+}
