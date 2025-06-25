@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getAllCollisions } from '../../lib/apis';
-import { Collisions, CollisionType } from '../../lib/types';
+import { CollisionType, ConflictResponse } from '../../lib/types';
 import {
   filterConflicts,
   getActiveFilterLabel,
@@ -8,19 +8,19 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
-import { hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
+import { getLengthOf2DArray, hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
 
 export default function Main() {
   const currentYear: number = new Date().getFullYear();
-  const [conflicts, setConflicts] = useState<Collisions>([]);
+  const [conflicts, setConflicts] = useState<ConflictResponse>([]);
   const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const totalIssues = conflicts.length
+  const totalIssues = getLengthOf2DArray(conflicts);
   const filterOptions = getFilterOptions(conflicts);
   const filteredConflicts = filterConflicts(conflicts, activeFilter);
-  const filteredTotalIssues = filteredConflicts.length;
+  const filteredTotalIssues = getLengthOf2DArray(filteredConflicts);
 
   async function getConflicts() {
     const spreadsheetID = await serverFunctions.getSpreadsheetID();
@@ -112,30 +112,12 @@ export default function Main() {
 
       <div className="flex flex-col gap-3">
         {filteredConflicts.map((data, index) => (
-          <Card key={index} lesson={data}/>
+          <div className="flex flex-col gap-10">
+            {data.map((data2, index2) => (
+              <Card key={index * data.length + index2} lesson={data2}/>
+            ))}
+          </div>
         ))}
-
-        {/* {filteredConflicts.map((data, index) => (
-          <Card
-            key={index}
-            conflictType={data.}
-          />
-        ))} */}
-
-        {/* {filteredConflicts.rooms.map((data, index) => (
-          <Card
-            key={`room-${index}`}
-            conflictType={ConflictType.roomConflict}
-            lesson={data}
-          />
-        ))}
-        {filteredConflicts.teachers.map((data, index) => (
-          <Card
-            key={`teacher-${index}`}
-            conflictType={ConflictType.teacherConflict}
-            lesson={data}
-          />
-        ))} */}
       </div>
 
       {totalIssues > 0 && filteredTotalIssues === 0 && (

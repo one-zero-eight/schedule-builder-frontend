@@ -1,29 +1,23 @@
-import { Collisions, CollisionType } from '../lib/types';
+import { CollisionType, ConflictResponse } from '../lib/types';
 
 export const filterConflicts = (
-  conflicts: Collisions,
+  conflicts: ConflictResponse,
   activeFilter: CollisionType | 'all'
-): Collisions => {
+): ConflictResponse => {
   if (activeFilter == "all") return conflicts
 
   return conflicts.filter(obj => {
-    if ("collisions" in obj) {
-      // Slot with multiple collisions
-      for (const slot of obj.collisions) {
-        // If any of conflicting slots have filtered conflict type, then we display all
-        if (slot.collision_type == activeFilter) {
-          return true
-        }
+    for (const slot of obj) {
+      if (slot.collision_type == activeFilter) {
+        return true
       }
-
-    } else {
-      // Slot with just one collision reason
-      return obj.collision_type == activeFilter
     }
+
+    return false;
   })
 };
 
-export const getFilterOptions = (conflicts: Collisions) => {
+export const getFilterOptions = (conflicts: ConflictResponse) => {
   const totalIssues = conflicts.length
 
   return [
@@ -42,6 +36,11 @@ export const getFilterOptions = (conflicts: Collisions) => {
       value: CollisionType.CAPACITY,
       label: 'Capacity Conflicts',
       count: 0,
+    },
+    {
+      value: CollisionType.OUTLOOK,
+      label: 'Outlook Conflicts',
+      count: 0
     }
   ];
 };
