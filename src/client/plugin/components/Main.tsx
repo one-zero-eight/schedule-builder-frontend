@@ -10,6 +10,7 @@ import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
 import { getLengthOf2DArray, hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
+import Spinner from './Spinner';
 
 enum ActionType {
   REQUEST_STARTED = 1,
@@ -43,7 +44,6 @@ function reducerLogic(state: StateType, action: Action): StateType {
       return { error: "", isLoading: false, conflicts: action.conflicts}
   }
 }
-
 
 export default function Main() {
   const [state, dispatch] = useReducer(reducerLogic, { error: "", isLoading: false, conflicts: [] })
@@ -79,11 +79,18 @@ export default function Main() {
         from the spreadsheet and click the button below
       </p>
       <button
-        className="bg-innohassle text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 disabled:bg-slate-400"
+        className="bg-innohassle disabled:bg-innohassle/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2"
         onClick={getConflicts}
         disabled={isLoading}
       >
-        {isLoading ? "Fetching info..." : "Check the scheduling"}
+        {isLoading ? (
+          <>
+        <Spinner color='white' />
+        Fetching info...
+          </>
+        ) : (
+          "Check the scheduling"
+        )}
       </button>
 
       {error && <p className='text-red-500'>Error: {error}</p>}
