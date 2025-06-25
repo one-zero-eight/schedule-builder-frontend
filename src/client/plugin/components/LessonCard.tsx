@@ -1,4 +1,3 @@
-// This is an example card without any meaningful info
 import { formatTimeForMoscow, groupNameToDisplayText } from "../../lib/utils"
 
 import { type Conflict } from "../../lib/types";

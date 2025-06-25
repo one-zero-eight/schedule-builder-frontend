@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import { getAllCollisions } from '../../lib/apis';
 import { CollisionType, ConflictResponse } from '../../lib/types';
 import {
@@ -11,9 +11,43 @@ import Card from './ConflictCard';
 import { getLengthOf2DArray, hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
 
+enum ActionType {
+  REQUEST_STARTED = 1,
+  REQUEST_SUCCESSFUL = 2,
+  REQUEST_FAILED = 3,
+}
+
+type Action = {
+  type: ActionType.REQUEST_STARTED
+} | {
+  type: ActionType.REQUEST_FAILED,
+  error: string,
+} | {
+  type: ActionType.REQUEST_SUCCESSFUL,
+  conflicts: ConflictResponse
+}
+
+interface StateType {
+  error: string,
+  isLoading: boolean,
+  conflicts: ConflictResponse
+}
+
+function reducerLogic(state: StateType, action: Action): StateType {
+  switch (action.type) {
+    case ActionType.REQUEST_STARTED:
+      return { ...state, error: "", isLoading: true }
+    case ActionType.REQUEST_FAILED:
+      return { ...state, error: action.error, isLoading: false}
+    case ActionType.REQUEST_SUCCESSFUL:
+      return { error: "", isLoading: false, conflicts: action.conflicts}
+  }
+}
+
+
 export default function Main() {
-  const currentYear: number = new Date().getFullYear();
-  const [conflicts, setConflicts] = useState<ConflictResponse>([]);
+  const [state, dispatch] = useReducer(reducerLogic, { error: "", isLoading: false, conflicts: [] })
+  const { conflicts, isLoading, error } = state
   const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -21,11 +55,18 @@ export default function Main() {
   const filterOptions = getFilterOptions(conflicts);
   const filteredConflicts = filterConflicts(conflicts, activeFilter);
   const filteredTotalIssues = getLengthOf2DArray(filteredConflicts);
+  const currentYear = new Date().getFullYear();
 
   async function getConflicts() {
+    dispatch({ type: ActionType.REQUEST_STARTED })
     const spreadsheetID = await serverFunctions.getSpreadsheetID();
-    const conflicts = await getAllCollisions(spreadsheetID, token);
-    setConflicts(conflicts);
+    const response = await getAllCollisions(spreadsheetID, token);
+  
+    if (response.success) {
+      dispatch({ type: ActionType.REQUEST_SUCCESSFUL, conflicts: response.payload})
+    } else {
+      dispatch({ type: ActionType.REQUEST_FAILED, error: response.error })
+    }
   }
 
   return (
@@ -38,11 +79,14 @@ export default function Main() {
         from the spreadsheet and click the button below
       </p>
       <button
-        className="bg-innohassle text-base py-1 px-6 text-center rounded-full hover:brightness-75"
+        className="bg-innohassle text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 disabled:bg-slate-400"
         onClick={getConflicts}
+        disabled={isLoading}
       >
-        Check the scheduling
+        {isLoading ? "Fetching info..." : "Check the scheduling"}
       </button>
+
+      {error && <p className='text-red-500'>Error: {error}</p>}
 
       {totalIssues > 0 && (
         <>

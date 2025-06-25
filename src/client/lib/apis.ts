@@ -1,8 +1,8 @@
-import { ConflictResponse } from './types';
+import { APIResponse, ConflictResponse } from './types';
 
 const baseURL = 'https://api.andycodes.ru';
 
-export async function getAllCollisions(spreadsheetID: string, token: string): Promise<ConflictResponse> {
+export async function getAllCollisions(spreadsheetID: string, token: string): Promise<APIResponse<ConflictResponse>> {
     const url = baseURL + '/collisions/check';
     const params = new URLSearchParams({
         google_spreadsheet_id: spreadsheetID
@@ -18,15 +18,13 @@ export async function getAllCollisions(spreadsheetID: string, token: string): Pr
         });
 
         if (!response.ok) {
-            throw new Error(`Got unexpected status code from backend: ${response.status}`);
+            return { success: false, error: `Backend sent ${response.status} status code =(` }
         }
 
         const data: ConflictResponse = await response.json();
-        console.log("Success! Received all the collisions nicely")
-        return data;
+        return { success: true, payload: data};
     } catch (error) {
         console.error('Error getting collisions:', error);
+        return { success: false, error: "Something went wrong with the request" }
     }
-
-    return []
 }
