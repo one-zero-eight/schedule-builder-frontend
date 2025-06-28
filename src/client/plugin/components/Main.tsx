@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useContext, useReducer, useState } from 'react';
 import { getAllCollisions } from '../../lib/apis';
 import { CollisionType, ConflictResponse } from '../../lib/types';
 import {
@@ -8,9 +8,11 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
-import { getLengthOf2DArray, hardcodedTokenBecauseIHateMyself as token } from '../../lib/utils';
+import { getLengthOf2DArray } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
 import Spinner from './Spinner';
+import APIForm from './apiToken/form';
+import apiContext from '../contexts/apiTokenContext';
 
 enum ActionType {
   REQUEST_STARTED = 1,
@@ -18,38 +20,48 @@ enum ActionType {
   REQUEST_FAILED = 3,
 }
 
-type Action = {
-  type: ActionType.REQUEST_STARTED
-} | {
-  type: ActionType.REQUEST_FAILED,
-  error: string,
-} | {
-  type: ActionType.REQUEST_SUCCESSFUL,
-  conflicts: ConflictResponse
-}
+type Action =
+  | {
+      type: ActionType.REQUEST_STARTED;
+    }
+  | {
+      type: ActionType.REQUEST_FAILED;
+      error: string;
+    }
+  | {
+      type: ActionType.REQUEST_SUCCESSFUL;
+      conflicts: ConflictResponse;
+    };
 
 interface StateType {
-  error: string,
-  isLoading: boolean,
-  conflicts: ConflictResponse
+  error: string;
+  isLoading: boolean;
+  conflicts: ConflictResponse;
 }
 
 function reducerLogic(state: StateType, action: Action): StateType {
   switch (action.type) {
     case ActionType.REQUEST_STARTED:
-      return { ...state, error: "", isLoading: true }
+      return { ...state, error: '', isLoading: true };
     case ActionType.REQUEST_FAILED:
-      return { ...state, error: action.error, isLoading: false}
+      return { ...state, error: action.error, isLoading: false };
     case ActionType.REQUEST_SUCCESSFUL:
-      return { error: "", isLoading: false, conflicts: action.conflicts}
+      return { error: '', isLoading: false, conflicts: action.conflicts };
   }
 }
 
 export default function Main() {
-  const [state, dispatch] = useReducer(reducerLogic, { error: "", isLoading: false, conflicts: [] })
-  const { conflicts, isLoading, error } = state
-  const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>('all');
+  const [state, dispatch] = useReducer(reducerLogic, {
+    error: '',
+    isLoading: false,
+    conflicts: [],
+  });
+  const { conflicts, isLoading, error } = state;
+  const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>(
+    'all'
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { token } = useContext(apiContext);
 
   const totalIssues = getLengthOf2DArray(conflicts);
   const filterOptions = getFilterOptions(conflicts);
@@ -58,26 +70,53 @@ export default function Main() {
   const currentYear = new Date().getFullYear();
 
   async function getConflicts() {
-    dispatch({ type: ActionType.REQUEST_STARTED })
+    console.log(token);
+    if (token === undefined || token === '') {
+      dispatch({
+        type: ActionType.REQUEST_FAILED,
+        error: 'Please paste the token before checking the schedule',
+      });
+      return;
+    }
+
+    dispatch({ type: ActionType.REQUEST_STARTED });
     const spreadsheetID = await serverFunctions.getSpreadsheetID();
     const response = await getAllCollisions(spreadsheetID, token);
-  
+
     if (response.success) {
-      dispatch({ type: ActionType.REQUEST_SUCCESSFUL, conflicts: response.payload})
+      dispatch({
+        type: ActionType.REQUEST_SUCCESSFUL,
+        conflicts: response.payload,
+      });
     } else {
-      dispatch({ type: ActionType.REQUEST_FAILED, error: response.error })
+      dispatch({ type: ActionType.REQUEST_FAILED, error: response.error });
     }
   }
 
   return (
     <main className="text-center text-white flex flex-col gap-3 h-full">
       <h1>
-        Inno<span className="text-innohassle">Hassle</span> SCR
+        InNo<span className="text-innohassle">Hassle</span> SCR
       </h1>
       <p>
-        To test the compatibility of a schedule draft, select the required sheet
-        from the spreadsheet and click the button below
+        To test the compatibility of the schedule:
+        <ol className="list-decimal text-start">
+          <li>
+            Go to this{' '}
+            <a
+              target="_blank"
+              href="https://api.innohassle.ru/accounts/v0/tokens/generate-my-token"
+              className="text-innohassle"
+            >
+              website
+            </a>{' '}
+            and copy the token
+          </li>
+          <li>Paste the token in the field below</li>
+          <li>Press the button "Check the schedule"</li>
+        </ol>
       </p>
+      <APIForm />
       <button
         className="bg-innohassle disabled:bg-innohassle/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2"
         onClick={getConflicts}
@@ -85,15 +124,15 @@ export default function Main() {
       >
         {isLoading ? (
           <>
-        <Spinner color='white' />
-        Fetching info...
+            <Spinner color="white" />
+            Fetching info...
           </>
         ) : (
-          "Check the scheduling"
+          'Check the scheduling'
         )}
       </button>
 
-      {error && <p className='text-red-500'>Error: {error}</p>}
+      {error && <p className="text-red-500">Error: {error}</p>}
 
       {totalIssues > 0 && (
         <>
@@ -135,7 +174,9 @@ export default function Main() {
                       <button
                         key={option.value}
                         onClick={() => {
-                          setActiveFilter(option.value as CollisionType | 'all');
+                          setActiveFilter(
+                            option.value as CollisionType | 'all'
+                          );
                           setIsDropdownOpen(false);
                         }}
                         className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
@@ -165,7 +206,7 @@ export default function Main() {
         {filteredConflicts.map((data, index) => (
           <div className="flex flex-col gap-10">
             {data.map((data2, index2) => (
-              <Card key={index * data.length + index2} lesson={data2}/>
+              <Card key={index * data.length + index2} lesson={data2} />
             ))}
           </div>
         ))}

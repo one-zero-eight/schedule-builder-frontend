@@ -9,22 +9,26 @@ export async function getAllCollisions(spreadsheetID: string, token: string): Pr
     });
 
     try {
-        const response = await fetch(`${url}?${params}`, {
-            method: 'GET',
-            headers: {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
+      const response = await fetch(`${url}?${params}`, {
+        method: 'GET',
+        headers: {
+          'accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-        if (!response.ok) {
-            return { success: false, error: `Backend sent ${response.status} status code =(` }
+      if (!response.ok) {
+        if (response.status === 401) {
+          return { success: false, error: "The API token you provided is wrong" };
         }
 
-        const data: ConflictResponse = await response.json();
-        return { success: true, payload: data};
+        return { success: false, error: `Backend sent ${response.status} status code =(` }
+      }
+
+      const data: ConflictResponse = await response.json();
+      return { success: true, payload: data};
     } catch (error) {
-        console.error('Error getting collisions:', error);
-        return { success: false, error: "Something went wrong with the request" }
+      console.error('Error getting collisions:', error);
+      return { success: false, error: "Something went wrong with the request" }
     }
 }
