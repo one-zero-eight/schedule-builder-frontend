@@ -18,30 +18,41 @@ export const filterConflicts = (
 };
 
 export const getFilterOptions = (conflicts: ConflictResponse) => {
-  const totalIssues = conflicts.length
+  const typeCounts = {
+    [CollisionType.ROOM]: 0,
+    [CollisionType.TEACHER]: 0,
+    [CollisionType.CAPACITY]: 0,
+    [CollisionType.OUTLOOK]: 0,
+  };
+
+  conflicts.flat().forEach((conflict) => {
+    typeCounts[conflict.collision_type]++;
+  });
+
+  const totalIssues = conflicts.flat().length;
 
   return [
     { value: 'all', label: 'All Issues', count: totalIssues },
     {
       value: CollisionType.ROOM,
       label: 'Room Conflicts',
-      count: 0, // hard to compute
+      count: typeCounts[CollisionType.ROOM],
     },
     {
       value: CollisionType.TEACHER,
       label: 'Teacher Conflicts',
-      count: 0, // should we even compute this in options?
+      count: typeCounts[CollisionType.TEACHER],
     },
     {
       value: CollisionType.CAPACITY,
       label: 'Capacity Conflicts',
-      count: 0,
+      count: typeCounts[CollisionType.CAPACITY],
     },
     {
       value: CollisionType.OUTLOOK,
       label: 'Outlook Conflicts',
-      count: 0
-    }
+      count: typeCounts[CollisionType.OUTLOOK],
+    },
   ];
 };
 
@@ -50,5 +61,5 @@ export const getActiveFilterLabel = (
   filterOptions: ReturnType<typeof getFilterOptions>
 ) => {
   const option = filterOptions.find((opt) => opt.value === activeFilter);
-  return `${option?.label} (${option?.count})`;
+  return `${option?.label} `;
 };

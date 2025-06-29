@@ -128,7 +128,7 @@ export default function Main() {
         {isLoading ? (
           <>
             <Spinner color="white" />
-            <div aria-live='polite'>{state.step}</div>
+            <div aria-live="polite">{state.step}</div>
           </>
         ) : (
           'Check the scheduling'
@@ -150,7 +150,8 @@ export default function Main() {
                   className="p-4 bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:brightness-110 transition-all"
                 >
                   <span>
-                    {getActiveFilterLabel(activeFilter, filterOptions)}
+                    {getActiveFilterLabel(activeFilter, filterOptions)} ({' '}
+                    {filteredTotalIssues} )
                   </span>
                   <svg
                     className={`w-4 h-4 transition-transform ${
@@ -173,24 +174,27 @@ export default function Main() {
               {isDropdownOpen && (
                 <div className="absolute top-full left-0 right-0 mt-1 p-0.5 bg-gradient-to-b from-[#8C35F6] to-[#5C20A6] rounded-lg z-10">
                   <div className="bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] overflow-hidden">
-                    {filterOptions.map((option) => (
-                      <button
-                        key={option.value}
-                        onClick={() => {
-                          setActiveFilter(
-                            option.value as CollisionType | 'all'
-                          );
-                          setIsDropdownOpen(false);
-                        }}
-                        className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
-                          activeFilter === option.value
-                            ? 'bg-innohassle text-white'
-                            : 'text-white'
-                        }`}
-                      >
-                        {option.label} ({option.count})
-                      </button>
-                    ))}
+                    {filterOptions.map(
+                      (option) =>
+                        Number(option.count) > 0 && (
+                          <button
+                            key={option.value}
+                            onClick={() => {
+                              setActiveFilter(
+                                option.value as CollisionType | 'all'
+                              );
+                              setIsDropdownOpen(false);
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
+                              activeFilter === option.value
+                                ? 'bg-innohassle text-white'
+                                : 'text-white'
+                            }`}
+                          >
+                            {option.label} ({option.count})
+                          </button>
+                        )
+                    )}
                   </div>
                 </div>
               )}
