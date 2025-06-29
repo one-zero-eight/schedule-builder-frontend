@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import { type ApiContextI } from '../../contexts/apiTokenContext';
 import apiContext from '../../contexts/apiTokenContext';
+import { TOKEN_EXPIRY_DAYS } from '../../../lib/constants';
+import { millisecondsToDays } from '../../../lib/utils';
 
 type tokenStorageType = {
   token: string
@@ -28,7 +30,7 @@ export default function ApiTokenProvider({
     const currentDate = new Date();
     const savedDate = new Date(received.savedAt);
     const timeDiffInMilliseconds = currentDate.getTime() - savedDate.getTime();
-    const daysBetween = timeDiffInMilliseconds / 1000 / 60 / 60 / 24;
+    const daysBetween = millisecondsToDays(timeDiffInMilliseconds);
 
     if (daysBetween >= 0.95) {
       localStorage.removeItem("saved-api-token");
@@ -41,7 +43,7 @@ export default function ApiTokenProvider({
   function updateToken(newToken: string) {
     localStorage.setItem("saved-api-token", JSON.stringify({
       token: newToken,
-      savedAt: new Date()
+      savedAt: new Date().toISOString(),
     }))
     setToken(newToken);
   }
