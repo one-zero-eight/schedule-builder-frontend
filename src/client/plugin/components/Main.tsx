@@ -128,7 +128,7 @@ export default function Main() {
         {isLoading ? (
           <>
             <Spinner color="white" />
-            {state.step}
+            <div aria-live='polite'>{state.step}</div>
           </>
         ) : (
           'Check the scheduling'
