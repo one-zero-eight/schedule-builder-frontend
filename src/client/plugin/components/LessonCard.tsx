@@ -3,21 +3,43 @@ import { formatTimeForMoscow, groupNameToDisplayText } from "../../lib/utils"
 import { type Conflict } from "../../lib/types";
 import { collisionTypeToDisplayText } from "../../lib/utils";
 import { serverFunctions } from "../../lib/serverFunctions";
+import selectBtn from "../selectBtn.png"
+import deleteBtn from "../deleteBtn.png"
+import { useState } from "react";
+import Spinner from "./Spinner";
 
 export default function LessonCard(slot: Conflict) {
+  const [isGoogleBusy, setIsGoogleBusy] = useState(false)
+
+  async function selectCell(range: string) {
+    setIsGoogleBusy(true)
+    await serverFunctions.selectTheRangeForUser(range)
+    setIsGoogleBusy(false)
+  }
+
   const timeString = formatTimeForMoscow(slot.start_time)
 
   return (
-    <div className="bg-dark border border-innohassle w-full text-center p-3 rounded-md select-text">
-      <p className="text-highlight">{slot.lesson_name}</p>
-      {"group_name" in slot && <p title={slot.group_name.toString()} className="">{groupNameToDisplayText(slot.group_name)}</p>}
-      <p className="text-highlight">{slot.teacher}</p>
-      <p className="select-text">{timeString} - {slot.room}</p>
+    <div className="bg-dark border border-innohassle w-full text-center p-3 rounded-md select-text flex">
+      <div className="grow">
+        <p className="text-highlight">{slot.lesson_name}</p>
+        {"group_name" in slot && <p title={slot.group_name.toString()} className="">{groupNameToDisplayText(slot.group_name)}</p>}
+        <p className="text-highlight">{slot.teacher}</p>
+        <p className="select-text">{timeString} - {slot.room}</p>
 
-      <hr className="my-1 border-subtle"/>
-
-      <p className="text-sm font-bold">{collisionTypeToDisplayText(slot.collision_type)}</p>
-      {"excel_range" in slot && <button className="border px-6 py-1 select-none" onClick={() => serverFunctions.selectTheRangeForUser(slot.excel_range)}>Select the range</button>}
+        <hr className="my-1 border-subtle"/>
+        <p className="text-sm font-bold">{collisionTypeToDisplayText(slot.collision_type)}</p>
+      </div>
+      <div className="shrink flex flex-col gap-1">
+        {"excel_range" in slot && (
+          <button disabled={isGoogleBusy} className="rounded-lg p-1 w-10 h-10 bg-highlight" onClick={() => selectCell(slot.excel_range)}>
+            {isGoogleBusy ? <Spinner /> : <img src={selectBtn} width={32} height={32}/>}
+          </button>
+        )}
+        <button className="rounded-lg p-1 bg-highlight" onClick={() => alert("Button is in development")}>
+          <img src={deleteBtn} width={32} height={32} alt="" />
+        </button>
+      </div>
     </div>
   );
 }

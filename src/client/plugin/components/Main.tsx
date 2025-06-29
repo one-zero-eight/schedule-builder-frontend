@@ -201,13 +201,14 @@ export default function Main() {
         </>
       )}
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 -mr-8">
         {filteredConflicts.map((data, index) => (
-          <div key={index} className="flex flex-col gap-10">
+          <>
             {data.map((data2, index2) => (
-              <Card key={index * data.length + index2} lesson={data2} />
+                <Card key={index * data.length + index2} lesson={data2} />
             ))}
-          </div>
+            <hr />
+          </>
         ))}
       </div>
 
