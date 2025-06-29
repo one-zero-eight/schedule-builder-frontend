@@ -55,6 +55,3 @@ export function sleep(ms: number) {
 export function getLengthOf2DArray(array: any[][]): number {
   return array.reduce((total, row) => total + row.length, 0)
 }
-
-
-export const hardcodedTokenBecauseIHateMyself = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2NmJiNTM2ZGVjYjlkYWVmZWYyYTU1ZDEiLCJlbWFpbCI6ImFuLm5vdmlrb3ZAaW5ub3BvbGlzLnVuaXZlcnNpdHkiLCJ0ZWxlZ3JhbV9pZCI6OTQ3NjU3NDYxLCJleHAiOjE3NTA5MjU5MjEsImlhdCI6MTc1MDgzOTUyMSwic2NvcGUiOiJtZSJ9.ekcjXeOy0T00N59Syp9kWab_ZlYNHb5RyPszeUCqWP55m1-OB7ZXDyXaHfV0PU2oSFPofUQaSBrGmKktiF07hmODXJj6E6ZtEF-jzQA6QZJsN9xY-Cvo5GzkKa4qnvRtwB8m2zI8chW4sk7EcAjY2AIfKsxCedLX0Gf9fUNYbbBeoib5YyMxtr05B-PGf7HhnfCroyZjPrREX2OrpLhy2BhuV59i4dUbwKsDbxGSsz1aMzH4Ial-PHa-tkwBxT_l59RaGw1irOQZuGg-4hHp9lqVA4_iSbbC6IPpPheDMT9OmJVM7_YArHOi9KuDORwt8veo3Od7_cSStW52sYN0QQ"
