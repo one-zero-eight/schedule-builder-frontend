@@ -15,14 +15,15 @@ import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 
 enum ActionType {
-  REQUEST_STARTED = 1,
+  REQUEST_IN_PROGRESS = 1,
   REQUEST_SUCCESSFUL = 2,
   REQUEST_FAILED = 3,
 }
 
 type Action =
   | {
-      type: ActionType.REQUEST_STARTED;
+      type: ActionType.REQUEST_IN_PROGRESS;
+      step: string;
     }
   | {
       type: ActionType.REQUEST_FAILED;
@@ -34,6 +35,7 @@ type Action =
     };
 
 interface StateType {
+  step: string;
   error: string;
   isLoading: boolean;
   conflicts: ConflictResponse;
@@ -41,17 +43,18 @@ interface StateType {
 
 function reducerLogic(state: StateType, action: Action): StateType {
   switch (action.type) {
-    case ActionType.REQUEST_STARTED:
-      return { ...state, error: '', isLoading: true };
+    case ActionType.REQUEST_IN_PROGRESS:
+      return { ...state, step: action.step, error: '', isLoading: true };
     case ActionType.REQUEST_FAILED:
-      return { ...state, error: action.error, isLoading: false };
+      return { ...state, step: '', error: action.error, isLoading: false };
     case ActionType.REQUEST_SUCCESSFUL:
-      return { error: '', isLoading: false, conflicts: action.conflicts };
+      return { error: '', step: '', isLoading: false, conflicts: action.conflicts };
   }
 }
 
 export default function Main() {
   const [state, dispatch] = useReducer(reducerLogic, {
+    step: '',
     error: '',
     isLoading: false,
     conflicts: [],
@@ -78,8 +81,9 @@ export default function Main() {
       return;
     }
 
-    dispatch({ type: ActionType.REQUEST_STARTED });
+    dispatch({ type: ActionType.REQUEST_IN_PROGRESS, step: "Requesting spreadsheet ID..." });
     const spreadsheetID = await serverFunctions.getSpreadsheetID();
+    dispatch({ type: ActionType.REQUEST_IN_PROGRESS, step: "Fetching collisions..." });
     const response = await getAllCollisions(spreadsheetID, token);
 
     if (response.success) {
@@ -124,7 +128,7 @@ export default function Main() {
         {isLoading ? (
           <>
             <Spinner color="white" />
-            Fetching info...
+            {state.step}
           </>
         ) : (
           'Check the scheduling'
