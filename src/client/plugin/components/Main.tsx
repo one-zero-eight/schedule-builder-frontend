@@ -70,7 +70,6 @@ export default function Main() {
   const currentYear = new Date().getFullYear();
 
   async function getConflicts() {
-    console.log(token);
     if (token === undefined || token === '') {
       dispatch({
         type: ActionType.REQUEST_FAILED,
@@ -98,7 +97,7 @@ export default function Main() {
       <h1>
         InNo<span className="text-innohassle">Hassle</span> SCR
       </h1>
-      <p>
+      <div>
         To test the compatibility of the schedule:
         <ol className="list-decimal text-start">
           <li>
@@ -115,7 +114,7 @@ export default function Main() {
           <li>Paste the token in the field below</li>
           <li>Press the button "Check the schedule"</li>
         </ol>
-      </p>
+      </div>
       <APIForm />
       <button
         className="bg-innohassle disabled:bg-innohassle/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2"
@@ -204,7 +203,7 @@ export default function Main() {
 
       <div className="flex flex-col gap-3">
         {filteredConflicts.map((data, index) => (
-          <div className="flex flex-col gap-10">
+          <div key={index} className="flex flex-col gap-10">
             {data.map((data2, index2) => (
               <Card key={index * data.length + index2} lesson={data2} />
             ))}

@@ -1,3 +1,4 @@
+import { API_TOKEN_INVALID_HTTP_STATUS } from './constants';
 import { APIResponse, ConflictResponse } from './types';
 
 const baseURL = 'https://api.andycodes.ru';
@@ -18,7 +19,7 @@ export async function getAllCollisions(spreadsheetID: string, token: string): Pr
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        if (response.status === API_TOKEN_INVALID_HTTP_STATUS) {
           return { success: false, error: "The API token you provided is wrong" };
         }
 

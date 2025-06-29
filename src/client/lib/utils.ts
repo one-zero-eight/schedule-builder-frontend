@@ -46,12 +46,14 @@ export function groupNameToDisplayText(name: string | string[]): string {
   return name;
 }
 
-
-
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function getLengthOf2DArray(array: any[][]): number {
   return array.reduce((total, row) => total + row.length, 0)
+}
+
+export function millisecondsToDays(milliseconds: number): number {
+  return milliseconds / 1000 / 60 / 60 / 24
 }
