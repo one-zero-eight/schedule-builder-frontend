@@ -207,7 +207,7 @@ export default function Main() {
             {data.map((data2, index2) => (
                 <Card key={index * data.length + index2} lesson={data2} />
             ))}
-            <hr />
+            <hr className='py-2 border-highlight'/>
           </>
         ))}
       </div>
