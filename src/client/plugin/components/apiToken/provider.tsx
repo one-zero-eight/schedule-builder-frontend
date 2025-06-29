@@ -18,18 +18,24 @@ export default function ApiTokenProvider({
     const storage = localStorage.getItem("saved-api-token")
     if (storage == null) { return undefined }
 
-    const received: tokenStorageType = JSON.parse(storage)
-    const currentDate = new Date()
-    const savedDate = new Date(received.savedAt)
-    const timeDiffInMilliseconds = currentDate.getTime() - savedDate.getTime()
-    const daysBetween = timeDiffInMilliseconds / 1000 / 60 / 60 / 24
+    let received: tokenStorageType;
+    try {
+      received = JSON.parse(storage);
+    } catch (error) {
+      console.error("Failed to parse saved API token:", error);
+      return undefined;
+    }
+    const currentDate = new Date();
+    const savedDate = new Date(received.savedAt);
+    const timeDiffInMilliseconds = currentDate.getTime() - savedDate.getTime();
+    const daysBetween = timeDiffInMilliseconds / 1000 / 60 / 60 / 24;
 
     if (daysBetween >= 0.95) {
-      localStorage.removeItem("saved-api-token")
-      return undefined
+      localStorage.removeItem("saved-api-token");
+      return undefined;
     }
 
-    return received.token
+    return received.token;
   });
 
   function updateToken(newToken: string) {
