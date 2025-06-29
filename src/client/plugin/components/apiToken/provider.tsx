@@ -32,7 +32,7 @@ export default function ApiTokenProvider({
     const timeDiffInMilliseconds = currentDate.getTime() - savedDate.getTime();
     const daysBetween = millisecondsToDays(timeDiffInMilliseconds);
 
-    if (daysBetween >= 0.95) {
+    if (daysBetween >= TOKEN_EXPIRY_DAYS) {
       localStorage.removeItem("saved-api-token");
       return undefined;
     }
