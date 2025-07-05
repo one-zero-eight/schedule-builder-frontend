@@ -43,7 +43,7 @@ export default function LessonCard({ lesson, onIgnore, mode = 'ignore' }: Lesson
             {buttonText}
           </button>
       <p className="text-highlight">{lesson.lesson_name}</p>
-      {"group_name" in lesson && <p title={lesson.group_name.toString()} className="">{groupNameToDisplayText(lesson.group_name)}</p>}
+      {("group_name" in lesson && lesson.group_name !== null) && <p title={lesson.group_name.toString()} className="">{groupNameToDisplayText(lesson.group_name)}</p>}
       <p className="text-highlight">{lesson.teacher}</p>
       <p className="select-text">{timeString} - {lesson.room}</p>
 

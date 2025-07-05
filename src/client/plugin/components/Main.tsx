@@ -8,7 +8,7 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
-import { getLengthOf2DArray, filterIgnoredConflicts, clearAllIgnoredConflicts, getIgnoredConflictIds } from '../../lib/utils';
+import { getLengthOf2DArray, filterIgnoredConflicts, getIgnoredConflictIds } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
 import Spinner from './Spinner';
 import APIForm from './apiToken/form';

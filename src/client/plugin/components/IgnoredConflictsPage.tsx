@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { Conflict } from '../../lib/types';
 import { getIgnoredConflictIds, removeIgnoredConflict, generateConflictId } from '../../lib/utils';
 import Card from './ConflictCard';
-import innohassleSvg from '../innohassle.svg';
 
 interface IgnoredConflictsPageProps {
   onBack: () => void;
