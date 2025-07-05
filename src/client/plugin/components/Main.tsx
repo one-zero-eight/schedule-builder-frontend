@@ -14,6 +14,7 @@ import Spinner from './Spinner';
 import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
+import React from 'react';
 
 enum ActionType {
   REQUEST_IN_PROGRESS = 1,
@@ -141,6 +142,7 @@ export default function Main() {
                 <a
                   target="_blank"
                   href="https://innohassle.ru/account/token"
+                  rel="noopener noreferer"
                   className="text-innohassle"
                 >
                   website
@@ -255,7 +257,7 @@ export default function Main() {
 
       <div className="flex flex-col gap-3 -mr-8">
         {filteredConflicts.map((data, index) => (
-          <>
+          <React.Fragment key={index}>
             {data.map((data2, index2) => (
                 <Card
                   key={index * data.length + index2}
@@ -264,7 +266,7 @@ export default function Main() {
                 />
             ))}
             <hr className='py-2 border-highlight'/>
-          </>
+          </React.Fragment>
         ))}
       </div>
 
