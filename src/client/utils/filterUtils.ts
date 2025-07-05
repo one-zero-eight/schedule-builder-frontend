@@ -32,25 +32,25 @@ export const getFilterOptions = (conflicts: ConflictResponse) => {
   const totalIssues = conflicts.flat().length;
 
   return [
-    { value: 'all', label: 'All Issues', count: totalIssues },
+    { value: 'all', label: 'All', count: totalIssues },
     {
       value: CollisionType.ROOM,
-      label: 'Room Conflicts',
+      label: 'Room',
       count: typeCounts[CollisionType.ROOM],
     },
     {
       value: CollisionType.TEACHER,
-      label: 'Teacher Conflicts',
+      label: 'Teacher',
       count: typeCounts[CollisionType.TEACHER],
     },
     {
       value: CollisionType.CAPACITY,
-      label: 'Capacity Conflicts',
+      label: 'Capacity',
       count: typeCounts[CollisionType.CAPACITY],
     },
     {
       value: CollisionType.OUTLOOK,
-      label: 'Outlook Conflicts',
+      label: 'Outlook',
       count: typeCounts[CollisionType.OUTLOOK],
     },
   ];
