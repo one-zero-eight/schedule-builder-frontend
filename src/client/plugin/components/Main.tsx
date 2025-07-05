@@ -256,19 +256,20 @@ export default function Main() {
             </>
           )}
 
-          <div className="flex flex-col gap-3">
-            {filteredConflicts.map((data, index) => (
-              <div key={index} className="flex flex-col gap-10">
-                {data.map((data2, index2) => (
-                  <Card 
-                    key={index * data.length + index2} 
-                    lesson={data2} 
-                    onIgnore={handleIgnoreConflict}
-                  />
-                ))}
-              </div>
+      <div className="flex flex-col gap-3 -mr-8">
+        {filteredConflicts.map((data, index) => (
+          <>
+            {data.map((data2, index2) => (
+                <Card
+                  key={index * data.length + index2}
+                  onIgnore={handleIgnoreConflict}
+                  lesson={data2}
+                />
             ))}
-          </div>
+            <hr className='py-2 border-highlight'/>
+          </>
+        ))}
+      </div>
 
           {totalIssues > 0 && filteredTotalIssues === 0 && (
             <p className="text-subtle text-center py-4">
