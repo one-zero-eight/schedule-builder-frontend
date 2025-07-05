@@ -87,8 +87,6 @@ export default function Main() {
     setIgnoredConflicts([...ignoredConflicts]);
   }, [ignoredConflicts]);
 
- 
-
   // Обработчик для переключения на страницу игнорируемых конфликтов
   const handleShowIgnored = useCallback(() => {
     setCurrentPage('ignored');
@@ -242,19 +240,18 @@ export default function Main() {
                   Showing {filteredTotalIssues} of {totalIssues} issues
                 </p>
               )}
-          
-                {hasIgnoredConflicts && (
-                  <button 
-                    className="text-sm text-subtle hover:text-white transition-colors" 
-                    onClick={handleShowIgnored} 
-                    title="Show ignored conflicts"
-                  >
-                    Show Ignored Conflicts
-                  </button>
-                )}
-              
             </>
           )}
+
+      {hasIgnoredConflicts && (
+        <button 
+          className="text-sm text-subtle hover:text-white transition-colors" 
+          onClick={handleShowIgnored} 
+          title="Show ignored conflicts"
+        >
+          Show Ignored Conflicts
+        </button>
+      )}
 
       <div className="flex flex-col gap-3 -mr-8">
         {filteredConflicts.map((data, index) => (
