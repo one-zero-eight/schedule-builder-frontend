@@ -140,7 +140,7 @@ export default function Main() {
                 Go to this{' '}
                 <a
                   target="_blank"
-                  href="https://api.innohassle.ru/accounts/v0/tokens/generate-my-token"
+                  href="https://innohassle.ru/account/token"
                   className="text-innohassle"
                 >
                   website
