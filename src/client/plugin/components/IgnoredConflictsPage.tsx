@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Conflict } from '../../lib/types';
 import { getIgnoredConflictIds, removeIgnoredConflict, generateConflictId } from '../../lib/utils';
 import Card from './ConflictCard';
+import innohassleSvg from '../innohassle.svg';
 
 interface IgnoredConflictsPageProps {
   onBack: () => void;
@@ -45,13 +46,17 @@ export default function IgnoredConflictsPage({ onBack, conflicts }: IgnoredConfl
 
   return (
     <div className="text-center text-white flex flex-col gap-3 h-full">
-      <div className="flex items-center w-full justify-between">
+      <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className=" absolute top-2 right-2 w-8 h-8 text-sm bg-gray-700 hover:bg-gray-700 text-white rounded-full transition-colors"
+          className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
         >
-          x
+          ← Back
         </button>
+        <h1>
+          InNo<span className="text-innohassle">Hassle</span> SCR
+        </h1>
+        <div className="w-20"></div> {/* Spacer for centering */}
       </div>
 
       <h2 className="text-xl font-semibold">Ignored Conflicts</h2>
@@ -82,6 +87,23 @@ export default function IgnoredConflictsPage({ onBack, conflicts }: IgnoredConfl
           <p className="text-subtle text-sm mt-2">All ignored conflicts will appear here</p>
         </div>
       )}
+
+      <footer className="flex flex-col items-center mt-auto select-none">
+        <a href="https://innohassle.ru" target="_blank">
+          <img
+            src={innohassleSvg}
+            width={48}
+            height={48}
+            alt="innohassle-logo"
+          />
+        </a>
+        <p className="mt-2">Schedule conflict resolver</p>
+        <p>
+          Project created for{' '}
+          <span className="text-innohassle">Software Project 2025</span> course
+        </p>
+        <p className="mt-2 text-subtle">Copyright © {new Date().getFullYear()}</p>
+      </footer>
     </div>
   );
 } 

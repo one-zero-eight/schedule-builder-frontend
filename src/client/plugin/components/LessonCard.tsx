@@ -3,8 +3,8 @@ import { formatTimeForMoscow, groupNameToDisplayText, addIgnoredConflict, remove
 import { type Conflict } from "../../lib/types";
 import { collisionTypeToDisplayText } from "../../lib/utils";
 import { serverFunctions } from "../../lib/serverFunctions";
-import selectBtn from "../selectBtn.png"
-import deleteBtn from "../deleteBtn.png"
+import selectBtn from "../Search Icon.svg"
+import deleteBtn from "../Delete Icon.svg"
 import { useState } from "react";
 import Spinner from "./Spinner";
 
@@ -45,16 +45,31 @@ export default function LessonCard({ lesson, onIgnore, mode = 'ignore' }: Lesson
         <p className="select-text">{timeString} - {lesson.room}</p>
         <p className="text-sm font-bold">{collisionTypeToDisplayText(lesson.collision_type)}</p>
       </div>
-      <div className="shrink flex flex-col gap-1">
-        {"excel_range" in lesson && (
-          <button disabled={isGoogleBusy} className="rounded-lg p-1 w-10 h-10 bg-dark brightness-150" onClick={() => selectCell(lesson.excel_range)}>
-            {isGoogleBusy ? <Spinner /> : <img src={selectBtn} width={32} height={32}/>}
+              <div className="shrink flex flex-col gap-1">
+          {"excel_range" in lesson && (
+            <button 
+              disabled={isGoogleBusy} 
+              className="rounded-lg p-1 w-10 h-10 bg-dark brightness-150 hover:bg-accent transition-colors" 
+              onClick={() => selectCell(lesson.excel_range)}
+              title="Select cell in spreadsheet"
+            >
+              {isGoogleBusy ? <Spinner /> : <img src={selectBtn} width={32} height={32} className="icon-select"/>}
+            </button>
+          )}
+          <button 
+            className="rounded-lg p-1 bg-dark brightness-150 hover:bg-accent transition-colors" 
+            onClick={handleAction}
+            title={mode === 'ignore' ? "Ignore this conflict" : "Restore this conflict"}
+          >
+            <img 
+              src={deleteBtn} 
+              width={32} 
+              height={32} 
+              alt="" 
+              className={mode === 'ignore' ? 'icon-ignore' : 'icon-restore'}
+            />
           </button>
-        )}
-        <button className="rounded-lg p-1 bg-dark brightness-150" onClick={handleAction}>
-          <img src={deleteBtn} width={32} height={32} alt="" />
-        </button>
-      </div>
+        </div>
     </div>
   );
 }
