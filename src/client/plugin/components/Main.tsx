@@ -15,6 +15,8 @@ import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
 import React from 'react';
+import { ThemeProvider, useTheme } from '../contexts/themeContext';
+import ThemeSettings from './ThemeSettings';
 
 enum ActionType {
   REQUEST_IN_PROGRESS = 1,
@@ -54,7 +56,7 @@ function reducerLogic(state: StateType, action: Action): StateType {
   }
 }
 
-export default function Main() {
+function MainContent() {
   const [state, dispatch] = useReducer(reducerLogic, {
     step: '',
     error: '',
@@ -69,6 +71,7 @@ export default function Main() {
   const [ignoredConflicts, setIgnoredConflicts] = useState<ConflictResponse>([]);
   const [currentPage, setCurrentPage] = useState<'main' | 'ignored'>('main');
   const { token } = useContext(apiContext);
+  const { setIsSettingsOpen } = useTheme();
 
   // Фильтруем игнорируемые конфликты
   const visibleConflicts = filterIgnoredConflicts(conflicts);
@@ -124,6 +127,13 @@ export default function Main() {
 
   return (
     <main className="text-center text-white flex flex-col gap-3 h-full">
+        <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 text-textSecondary hover:text-text transition-colors absolute top-2 right-2"
+              title="Theme Settings"
+            >
+              ⚙️
+            </button>
       {currentPage === 'ignored' ? (
         <IgnoredConflictsPage 
           onBack={handleBackToMain} 
@@ -131,9 +141,11 @@ export default function Main() {
         />
       ) : (
         <>
-          <h1>
-            InNo<span className="text-innohassle">Hassle</span> SCR
-          </h1>
+          <div className="flex justify-center items-center">
+            <h1>
+              InNo<span className="text-innohassle">Hassle</span> SCR
+            </h1>
+          </div>
           <div>
             To test the compatibility of the schedule:
             <ol className="list-decimal text-start">
@@ -157,7 +169,7 @@ export default function Main() {
           <APIForm />
 
           <button
-            className="bg-innohassle disabled:bg-innohassle/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2"
+            className="bg-primary disabled:bg-primary/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2 text-white"
             onClick={getConflicts}
             disabled={isLoading}
           >
@@ -180,10 +192,10 @@ export default function Main() {
               {/* Custom Filter Selector */}
               <div className="flex justify-center gap-4 items-center">
                 <div className="relative">
-                  <div className="p-0.5 bg-gradient-to-b from-[#8C35F6] to-[#5C20A6] rounded-lg">
+                  <div className="p-0.5 bg-primary rounded-lg">
                     <button
                       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className="p-4 bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:brightness-110 transition-all"
+                      className="p-4 bg-surface rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:bg-accent transition-all text-text filter-button"
                     >
                       <span>
                         {getActiveFilterLabel(activeFilter, filterOptions)} ({' '}
@@ -208,8 +220,8 @@ export default function Main() {
                   </div>
 
                   {isDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-1 p-0.5 bg-gradient-to-b from-[#8C35F6] to-[#5C20A6] rounded-lg z-10">
-                      <div className="bg-gradient-to-b from-[#323232] to-[#282828] rounded-[calc(0.5rem-1px)] overflow-hidden">
+                    <div className="absolute top-full left-0 right-0 mt-1 p-0.5 bg-primary rounded-lg z-10">
+                      <div className="bg-surface rounded-[calc(0.5rem-1px)] overflow-hidden border border-border">
                         {filterOptions.map(
                           (option) =>
                             Number(option.count) > 0 && (
@@ -221,10 +233,10 @@ export default function Main() {
                                   );
                                   setIsDropdownOpen(false);
                                 }}
-                                className={`w-full px-4 py-3 text-left hover:bg-gray-600 transition-colors ${
+                                className={`filter-option w-full px-4 py-3 text-left ${
                                   activeFilter === option.value
-                                    ? 'bg-innohassle text-white'
-                                    : 'text-white'
+                                    ? 'active'
+                                    : 'text-text'
                                 }`}
                               >
                                 {option.label} ({option.count})
@@ -234,7 +246,7 @@ export default function Main() {
                       </div>
                     </div>
                   )}
-                </div>             
+                </div>
               </div>
 
               {activeFilter !== 'all' && (
@@ -242,33 +254,34 @@ export default function Main() {
                   Showing {filteredTotalIssues} of {totalIssues} issues
                 </p>
               )}
+            
+              {hasIgnoredConflicts && (
+                <button 
+                  className="text-sm text-textSecondary hover:text-text transition-colors" 
+                  onClick={handleShowIgnored} 
+                  title="Show ignored conflicts"
+                >
+                  Show Ignored Conflicts
+                </button>
+              )}
             </>
           )}
 
-      {hasIgnoredConflicts && (
-        <button 
-          className="text-sm text-subtle hover:text-white transition-colors" 
-          onClick={handleShowIgnored} 
-          title="Show ignored conflicts"
-        >
-          Show Ignored Conflicts
-        </button>
-      )}
-
-      <div className="flex flex-col gap-3 -mr-8">
-        {filteredConflicts.map((data, index) => (
-          <React.Fragment key={index}>
-            {data.map((data2, index2) => (
-                <Card
-                  key={index * data.length + index2}
-                  onIgnore={handleIgnoreConflict}
-                  lesson={data2}
-                />
+          <div className="flex flex-col gap-3 -mr-8">
+            {filteredConflicts.map((data, index) => (
+              <React.Fragment key={index}>
+                {data.map((data2, index2) => (
+                  <Card
+                    key={index * data.length + index2}
+                    onIgnore={handleIgnoreConflict}
+                    lesson={data2}
+                    mode="ignore"
+                  />
+                ))}
+                <hr className='py-2 border-highlight'/>
+              </React.Fragment>
             ))}
-            <hr className='py-2 border-highlight'/>
-          </React.Fragment>
-        ))}
-      </div>
+          </div>
 
           {totalIssues > 0 && filteredTotalIssues === 0 && (
             <p className="text-subtle text-center py-4">
@@ -294,6 +307,16 @@ export default function Main() {
           </footer>
         </>
       )}
+      
+      <ThemeSettings />
     </main>
+  );
+}
+
+export default function Main() {
+  return (
+    <ThemeProvider>
+      <MainContent />
+    </ThemeProvider>
   );
 }

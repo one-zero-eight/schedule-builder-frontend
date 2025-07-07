@@ -5,6 +5,24 @@ export enum CollisionType {
   OUTLOOK = "outlook",
 }
 
+export interface ColorTheme {
+  id: string;
+  name: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    surface: string;
+    text: string;
+    textSecondary: string;
+    border: string;
+    error: string;
+    success: string;
+    warning: string;
+  };
+}
+
 type ConflictingLesson = {
   lesson_name: string;
   weekday: string;
