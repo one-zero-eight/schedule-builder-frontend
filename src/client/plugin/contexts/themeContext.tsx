@@ -1,6 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { ColorTheme } from '../../lib/types';
-import { getThemeFromStorage, saveThemeToStorage, predefinedThemes } from '../../lib/themes';
+import {
+  getThemeFromStorage,
+  saveThemeToStorage,
+  predefinedThemes,
+} from '../../lib/themes';
 
 interface ThemeContextType {
   currentTheme: ColorTheme;
@@ -17,13 +27,15 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(getThemeFromStorage());
+  const [currentTheme, setCurrentTheme] = useState<ColorTheme>(
+    getThemeFromStorage()
+  );
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const setTheme = (theme: ColorTheme) => {
     setCurrentTheme(theme);
     saveThemeToStorage(theme);
-    
+
     // Применяем CSS переменные к документу
     const root = document.documentElement;
     Object.entries(theme.colors).forEach(([key, value]) => {
@@ -48,7 +60,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     const body = document.body;
     body.className = body.className.replace(/theme-\w+/g, ''); // Удаляем старые классы тем
     body.classList.add(`theme-${theme.id}`);
-    
+
     // Добавляем специальный класс для светлой темы
     if (theme.id === 'light') {
       body.classList.add('light-mode');
@@ -63,13 +75,15 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{
-      currentTheme,
-      setTheme,
-      predefinedThemes,
-      isSettingsOpen,
-      setIsSettingsOpen,
-    }}>
+    <ThemeContext.Provider
+      value={{
+        currentTheme,
+        setTheme,
+        predefinedThemes,
+        isSettingsOpen,
+        setIsSettingsOpen,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
@@ -81,4 +95,4 @@ export function useTheme() {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-} 
+}

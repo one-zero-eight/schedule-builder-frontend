@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTheme } from '../contexts/themeContext';
 import { ColorTheme } from '../../lib/types';
 
 export default function ThemeSettings() {
-  const { currentTheme, setTheme, predefinedThemes, isSettingsOpen, setIsSettingsOpen } = useTheme();
+  const {
+    currentTheme,
+    setTheme,
+    predefinedThemes,
+    isSettingsOpen,
+    setIsSettingsOpen,
+  } = useTheme();
   const [customTheme, setCustomTheme] = useState<ColorTheme>(currentTheme);
   const [isCustomizing, setIsCustomizing] = useState(false);
 
@@ -13,7 +19,10 @@ export default function ThemeSettings() {
     setIsCustomizing(false);
   };
 
-  const handleCustomThemeChange = (colorKey: keyof ColorTheme['colors'], value: string) => {
+  const handleCustomThemeChange = (
+    colorKey: keyof ColorTheme['colors'],
+    value: string
+  ) => {
     const updatedTheme = {
       ...customTheme,
       colors: {
@@ -57,7 +66,9 @@ export default function ThemeSettings() {
 
         {/* Предустановленные темы */}
         <div className="mb-6">
-          <h3 className="text-lg font-medium text-text mb-3">Predefined Themes</h3>
+          <h3 className="text-lg font-medium text-text mb-3">
+            Predefined Themes
+          </h3>
           <div className="grid grid-cols-2 gap-3">
             {predefinedThemes.map((theme) => (
               <button
@@ -74,7 +85,9 @@ export default function ThemeSettings() {
                     className="w-4 h-4 rounded-full"
                     style={{ backgroundColor: theme.colors.primary }}
                   />
-                  <span className="text-sm font-medium text-text">{theme.name}</span>
+                  <span className="text-sm font-medium text-text">
+                    {theme.name}
+                  </span>
                 </div>
                 <div className="flex gap-1">
                   <div
@@ -117,19 +130,29 @@ export default function ThemeSettings() {
                   <input
                     type="color"
                     value={value}
-                    onChange={(e) => handleCustomThemeChange(key as keyof ColorTheme['colors'], e.target.value)}
+                    onChange={(e) =>
+                      handleCustomThemeChange(
+                        key as keyof ColorTheme['colors'],
+                        e.target.value
+                      )
+                    }
                     className="w-8 h-8 rounded border border-border"
                   />
                   <input
                     type="text"
                     value={value}
-                    onChange={(e) => handleCustomThemeChange(key as keyof ColorTheme['colors'], e.target.value)}
+                    onChange={(e) =>
+                      handleCustomThemeChange(
+                        key as keyof ColorTheme['colors'],
+                        e.target.value
+                      )
+                    }
                     className="flex-1 px-2 py-1 text-sm bg-surface border border-border rounded text-text"
                     placeholder="#000000"
                   />
                 </div>
               ))}
-              
+
               <div className="flex gap-2 pt-3">
                 <button
                   onClick={handleSaveCustomTheme}
@@ -169,4 +192,4 @@ export default function ThemeSettings() {
       </div>
     </div>
   );
-} 
+}

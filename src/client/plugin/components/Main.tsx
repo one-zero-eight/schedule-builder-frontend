@@ -8,15 +8,20 @@ import {
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
 import Card from './ConflictCard';
-import { getLengthOf2DArray, filterIgnoredConflicts, getIgnoredConflictIds } from '../../lib/utils';
+import {
+  getLengthOf2DArray,
+  filterIgnoredConflicts,
+  getIgnoredConflictIds,
+} from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
 import Spinner from './Spinner';
 import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
-import React from 'react';
 import { ThemeProvider, useTheme } from '../contexts/themeContext';
 import ThemeSettings from './ThemeSettings';
+
+import LoadingButton from './LoadingButton';
 
 enum ActionType {
   REQUEST_IN_PROGRESS = 1,
@@ -52,7 +57,17 @@ function reducerLogic(state: StateType, action: Action): StateType {
     case ActionType.REQUEST_FAILED:
       return { ...state, step: '', error: action.error, isLoading: false };
     case ActionType.REQUEST_SUCCESSFUL:
-      return { error: '', step: '', isLoading: false, conflicts: action.conflicts };
+      return {
+        error: '',
+        step: '',
+        isLoading: false,
+        conflicts: action.conflicts,
+      };
+    default:
+      return {
+        ...state,
+        error: 'Contact developers. Reached default case for reducer',
+      };
   }
 }
 
@@ -68,14 +83,16 @@ function MainContent() {
     'all'
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [ignoredConflicts, setIgnoredConflicts] = useState<ConflictResponse>([]);
+  const [ignoredConflicts, setIgnoredConflicts] = useState<ConflictResponse>(
+    []
+  );
   const [currentPage, setCurrentPage] = useState<'main' | 'ignored'>('main');
   const { token } = useContext(apiContext);
   const { setIsSettingsOpen } = useTheme();
 
   // Фильтруем игнорируемые конфликты
   const visibleConflicts = filterIgnoredConflicts(conflicts);
-  
+
   const totalIssues = getLengthOf2DArray(visibleConflicts);
   const filterOptions = getFilterOptions(visibleConflicts);
   const filteredConflicts = filterConflicts(visibleConflicts, activeFilter);
@@ -110,9 +127,15 @@ function MainContent() {
       return;
     }
 
-    dispatch({ type: ActionType.REQUEST_IN_PROGRESS, step: "Requesting spreadsheet ID..." });
+    dispatch({
+      type: ActionType.REQUEST_IN_PROGRESS,
+      step: 'Requesting spreadsheet ID...',
+    });
     const spreadsheetID = await serverFunctions.getSpreadsheetID();
-    dispatch({ type: ActionType.REQUEST_IN_PROGRESS, step: "Fetching collisions..." });
+    dispatch({
+      type: ActionType.REQUEST_IN_PROGRESS,
+      step: 'Fetching collisions...',
+    });
     const response = await getAllCollisions(spreadsheetID, token);
 
     if (response.success) {
@@ -127,18 +150,15 @@ function MainContent() {
 
   return (
     <main className="text-center text-white flex flex-col gap-3 h-full">
-        <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="p-2 text-textSecondary hover:text-text transition-colors absolute top-2 right-2"
-              title="Theme Settings"
-            >
-              ⚙️
-            </button>
+      <button
+        onClick={() => setIsSettingsOpen(true)}
+        className="p-2 text-textSecondary hover:text-text transition-colors absolute top-2 right-2"
+        title="Theme Settings"
+      >
+        ⚙️
+      </button>
       {currentPage === 'ignored' ? (
-        <IgnoredConflictsPage 
-          onBack={handleBackToMain} 
-          conflicts={conflicts} 
-        />
+        <IgnoredConflictsPage onBack={handleBackToMain} conflicts={conflicts} />
       ) : (
         <>
           <div className="flex justify-center items-center">
@@ -168,20 +188,14 @@ function MainContent() {
 
           <APIForm />
 
-          <button
+          <LoadingButton
             className="bg-primary disabled:bg-primary/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2 text-white"
             onClick={getConflicts}
-            disabled={isLoading}
+            loadingText={state.step}
+            isLoading={isLoading}
           >
-            {isLoading ? (
-              <>
-                <Spinner color="white" />
-                <div aria-live="polite">{state.step}</div>
-              </>
-            ) : (
-              'Check the scheduling'
-            )}
-          </button>
+            Check the schedule
+          </LoadingButton>
 
           {error && <p className="text-red-500">Error: {error}</p>}
 
@@ -254,11 +268,11 @@ function MainContent() {
                   Showing {filteredTotalIssues} of {totalIssues} issues
                 </p>
               )}
-            
+
               {hasIgnoredConflicts && (
-                <button 
-                  className="text-sm text-textSecondary hover:text-text transition-colors" 
-                  onClick={handleShowIgnored} 
+                <button
+                  className="text-sm text-textSecondary hover:text-text transition-colors"
+                  onClick={handleShowIgnored}
                   title="Show ignored conflicts"
                 >
                   Show Ignored Conflicts
@@ -278,7 +292,7 @@ function MainContent() {
                     mode="ignore"
                   />
                 ))}
-                <hr className='py-2 border-highlight'/>
+                <hr className="py-2 border-highlight" />
               </React.Fragment>
             ))}
           </div>
@@ -301,13 +315,14 @@ function MainContent() {
             <p className="mt-2">Schedule conflict resolver</p>
             <p>
               Project created for{' '}
-              <span className="text-innohassle">Software Project 2025</span> course
+              <span className="text-innohassle">Software Project 2025</span>{' '}
+              course
             </p>
             <p className="mt-2 text-subtle">Copyright © {currentYear}</p>
           </footer>
         </>
       )}
-      
+
       <ThemeSettings />
     </main>
   );
