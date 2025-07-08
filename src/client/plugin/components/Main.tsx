@@ -1,5 +1,4 @@
-import { useContext, useReducer, useState, useCallback } from 'react';
-import { getAllCollisions } from '../../lib/apis';
+import React, { useContext, useState, useCallback } from 'react';
 import { CollisionType, ConflictResponse } from '../../lib/types';
 import {
   filterConflicts,
@@ -13,7 +12,6 @@ import {
   filterIgnoredConflicts,
   getIgnoredConflictIds,
 } from '../../lib/utils';
-import { serverFunctions } from '../../lib/serverFunctions';
 import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
@@ -23,64 +21,13 @@ import ThemeSettings from './ThemeSettings';
 import LoadingButton from './LoadingButton';
 import ErrorText from './ErrorText';
 import Header from '../pages/main/Header';
-import React from 'react';
-
-enum ActionType {
-  REQUEST_IN_PROGRESS = 1,
-  REQUEST_SUCCESSFUL = 2,
-  REQUEST_FAILED = 3,
-}
-
-type Action =
-  | {
-      type: ActionType.REQUEST_IN_PROGRESS;
-      step: string;
-    }
-  | {
-      type: ActionType.REQUEST_FAILED;
-      error: string;
-    }
-  | {
-      type: ActionType.REQUEST_SUCCESSFUL;
-      conflicts: ConflictResponse;
-    };
-
-interface StateType {
-  step: string;
-  error: string;
-  isLoading: boolean;
-  conflicts: ConflictResponse;
-}
-
-function reducerLogic(state: StateType, action: Action): StateType {
-  switch (action.type) {
-    case ActionType.REQUEST_IN_PROGRESS:
-      return { ...state, step: action.step, error: '', isLoading: true };
-    case ActionType.REQUEST_FAILED:
-      return { ...state, step: '', error: action.error, isLoading: false };
-    case ActionType.REQUEST_SUCCESSFUL:
-      return {
-        error: '',
-        step: '',
-        isLoading: false,
-        conflicts: action.conflicts,
-      };
-    default:
-      return {
-        ...state,
-        error: 'Contact developers. Reached default case for reducer',
-      };
-  }
-}
+import useAPI from '../hooks/queryApi';
+import getAllCollisions from '../../lib/api/apis';
 
 function MainContent() {
-  const [state, dispatch] = useReducer(reducerLogic, {
-    step: '',
-    error: '',
-    isLoading: false,
-    conflicts: [],
-  });
-  const { conflicts, isLoading, error } = state;
+  const [callAPI, requestState] = useAPI(getAllCollisions, []);
+  const { payload: conflicts, isLoading, error, step } = requestState;
+
   const [activeFilter, setActiveFilter] = useState<CollisionType | 'all'>(
     'all'
   );
@@ -122,32 +69,10 @@ function MainContent() {
 
   async function getConflicts() {
     if (token === undefined || token === '') {
-      dispatch({
-        type: ActionType.REQUEST_FAILED,
-        error: 'Please paste the token before checking the schedule',
-      });
       return;
     }
 
-    dispatch({
-      type: ActionType.REQUEST_IN_PROGRESS,
-      step: 'Requesting spreadsheet ID...',
-    });
-    const spreadsheetID = await serverFunctions.getSpreadsheetID();
-    dispatch({
-      type: ActionType.REQUEST_IN_PROGRESS,
-      step: 'Fetching collisions...',
-    });
-    const response = await getAllCollisions(spreadsheetID, token);
-
-    if (response.success) {
-      dispatch({
-        type: ActionType.REQUEST_SUCCESSFUL,
-        conflicts: response.payload,
-      });
-    } else {
-      dispatch({ type: ActionType.REQUEST_FAILED, error: response.error });
-    }
+    await callAPI(token);
   }
 
   return (
@@ -166,9 +91,10 @@ function MainContent() {
           <Header />
           <APIForm />
           <LoadingButton
-            className="bg-primary disabled:bg-primary/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2 text-white"
+            className="bg-primary disabled:opacity-50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2 text-white"
+            disabled={isLoading}
             onClick={getConflicts}
-            loadingText={state.step}
+            loadingText={step}
             isLoading={isLoading}
           >
             Check the schedule
