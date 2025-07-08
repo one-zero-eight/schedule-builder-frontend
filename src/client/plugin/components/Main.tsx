@@ -22,6 +22,7 @@ import { ThemeProvider, useTheme } from '../contexts/themeContext';
 import ThemeSettings from './ThemeSettings';
 
 import LoadingButton from './LoadingButton';
+import ErrorText from './ErrorText';
 
 enum ActionType {
   REQUEST_IN_PROGRESS = 1,
@@ -196,8 +197,7 @@ function MainContent() {
           >
             Check the schedule
           </LoadingButton>
-
-          {error && <p className="text-red-500">Error: {error}</p>}
+          <ErrorText>{error}</ErrorText>
 
           {totalIssues > 0 && (
             <>
