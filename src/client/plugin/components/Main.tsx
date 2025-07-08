@@ -15,7 +15,8 @@ import {
 import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
-import { ThemeProvider, useTheme } from '../contexts/themeContext';
+import { useTheme } from '../contexts/themeContext';
+import ThemeProvider from './ThemeProvider';
 import ThemeSettings from './ThemeSettings';
 
 import LoadingButton from './LoadingButton';
