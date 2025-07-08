@@ -14,7 +14,6 @@ import {
   getIgnoredConflictIds,
 } from '../../lib/utils';
 import { serverFunctions } from '../../lib/serverFunctions';
-import Spinner from './Spinner';
 import APIForm from './apiToken/form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
@@ -23,6 +22,8 @@ import ThemeSettings from './ThemeSettings';
 
 import LoadingButton from './LoadingButton';
 import ErrorText from './ErrorText';
+import Header from '../pages/main/Header';
+import React from 'react';
 
 enum ActionType {
   REQUEST_IN_PROGRESS = 1,
@@ -162,33 +163,8 @@ function MainContent() {
         <IgnoredConflictsPage onBack={handleBackToMain} conflicts={conflicts} />
       ) : (
         <>
-          <div className="flex justify-center items-center">
-            <h1>
-              InNo<span className="text-innohassle">Hassle</span> SCR
-            </h1>
-          </div>
-          <div>
-            To test the compatibility of the schedule:
-            <ol className="list-decimal text-start">
-              <li>
-                Go to this{' '}
-                <a
-                  target="_blank"
-                  href="https://innohassle.ru/account/token"
-                  rel="noopener noreferer"
-                  className="text-innohassle"
-                >
-                  website
-                </a>{' '}
-                and copy the token
-              </li>
-              <li>Paste the token in the field below</li>
-              <li>Press the button "Check the schedule"</li>
-            </ol>
-          </div>
-
+          <Header />
           <APIForm />
-
           <LoadingButton
             className="bg-primary disabled:bg-primary/50 text-base py-1 px-6 text-center rounded-full hover:brightness-75 disabled:hover:brightness-100 flex items-center justify-center gap-2 text-white"
             onClick={getConflicts}
