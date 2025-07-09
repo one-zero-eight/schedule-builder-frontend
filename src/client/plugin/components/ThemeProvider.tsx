@@ -5,7 +5,7 @@ import {
   saveThemeToStorage,
   predefinedThemes,
 } from '../../lib/themes';
-import { ThemeContext } from '../contexts/themeContext';
+import themeContext from '../contexts/themeContext';
 
 interface ThemeProviderProps {
   children: ReactNode;
@@ -64,7 +64,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
   }, []);
 
   return (
-    <ThemeContext.Provider
+    <themeContext.Provider
       value={{
         currentTheme,
         setTheme,
@@ -74,6 +74,6 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
       }}
     >
       {children}
-    </ThemeContext.Provider>
+    </themeContext.Provider>
   );
 }

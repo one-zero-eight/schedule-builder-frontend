@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from '../contexts/themeContext';
+import useTheme from '../hooks/useTheme';
 import { ColorTheme } from '../../lib/types';
 
 export default function ThemeSettings() {
