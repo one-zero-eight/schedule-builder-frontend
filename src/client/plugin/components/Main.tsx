@@ -6,7 +6,7 @@ import {
   getFilterOptions,
 } from '../../utils/filterUtils';
 import innohassleSvg from '../innohassle.svg';
-import Card from './ConflictCard';
+import Card from './LessonCard';
 import {
   getLengthOf2DArray,
   filterIgnoredConflicts,

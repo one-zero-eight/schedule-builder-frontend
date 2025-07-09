@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import Main from './components/Main';
-import ApiTokenProvider from './components/apiToken/provider';
+import ApiTokenProvider from './components/apiToken/Provider';
 import './styles.css';
 
 const container = document.getElementById('index');

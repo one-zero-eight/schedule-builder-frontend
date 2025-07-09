@@ -5,7 +5,7 @@ import {
   removeIgnoredConflict,
   getConflictId,
 } from '../../lib/utils';
-import Card from './ConflictCard';
+import Card from './LessonCard';
 import innohassleSvg from '../innohassle.svg';
 
 interface IgnoredConflictsPageProps {

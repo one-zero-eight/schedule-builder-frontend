@@ -6,10 +6,9 @@ import { TOKEN_EXPIRY_DAYS } from '../../../lib/constants';
 import { millisecondsToDays } from '../../../lib/utils';
 
 type tokenStorageType = {
-  token: string
-  savedAt: string
-}
-
+  token: string;
+  savedAt: string;
+};
 
 export default function ApiTokenProvider({
   children,
@@ -17,14 +16,13 @@ export default function ApiTokenProvider({
   children: React.ReactNode;
 }) {
   const [token, setToken] = useState<ApiContextI['token']>(() => {
-    const storage = localStorage.getItem("saved-api-token")
-    if (storage == null) { return undefined }
+    const storage = localStorage.getItem('saved-api-token');
+    if (storage == null) return undefined;
 
     let received: tokenStorageType;
     try {
       received = JSON.parse(storage);
     } catch (error) {
-      console.error("Failed to parse saved API token:", error);
       return undefined;
     }
     const currentDate = new Date();
@@ -33,7 +31,7 @@ export default function ApiTokenProvider({
     const daysBetween = millisecondsToDays(timeDiffInMilliseconds);
 
     if (daysBetween >= TOKEN_EXPIRY_DAYS) {
-      localStorage.removeItem("saved-api-token");
+      localStorage.removeItem('saved-api-token');
       return undefined;
     }
 
@@ -41,10 +39,13 @@ export default function ApiTokenProvider({
   });
 
   function updateToken(newToken: string) {
-    localStorage.setItem("saved-api-token", JSON.stringify({
-      token: newToken,
-      savedAt: new Date().toISOString(),
-    }))
+    localStorage.setItem(
+      'saved-api-token',
+      JSON.stringify({
+        token: newToken,
+        savedAt: new Date().toISOString(),
+      })
+    );
     setToken(newToken);
   }
 
