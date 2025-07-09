@@ -1,3 +1,5 @@
+import { INNOHASSLE_TOKEN_URL } from '../../../lib/constants';
+
 export default function Header() {
   return (
     <div>
@@ -10,7 +12,7 @@ export default function Header() {
           Go to this{' '}
           <a
             target="_blank"
-            href="https://innohassle.ru/account/token"
+            href={INNOHASSLE_TOKEN_URL}
             rel="noopener noreferer"
             className="text-innohassle"
           >

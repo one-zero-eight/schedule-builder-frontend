@@ -5,7 +5,6 @@ export default function APIForm() {
   const { token, updateToken } = useContext(apiContext);
 
   return (
-    // <div>
     <input
       className="bg-dark border px-2 py-1 rounded-lg border-innohassle focus:border-innohassle/50"
       type="text"
@@ -13,6 +12,5 @@ export default function APIForm() {
       placeholder="Paste API token here..."
       onChange={(e) => updateToken(e.target.value)}
     />
-    // </div>
   );
 }

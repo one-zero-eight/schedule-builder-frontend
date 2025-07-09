@@ -24,6 +24,7 @@ import ErrorText from './ErrorText';
 import Header from '../pages/main/Header';
 import useAPI from '../hooks/useAPI';
 import getAllCollisions from '../../lib/api/endpoints';
+import { INNOHASSLE_URL } from '../../lib/constants';
 
 function MainContent() {
   const [callAPI, requestState] = useAPI(getAllCollisions, []);
@@ -207,7 +208,7 @@ function MainContent() {
           )}
 
           <footer className="flex flex-col items-center mt-auto select-none">
-            <a href="https://innohassle.ru" target="_blank">
+            <a href={INNOHASSLE_URL} target="_blank">
               <img
                 src={innohassleSvg}
                 width={48}

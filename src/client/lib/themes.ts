@@ -1,4 +1,5 @@
 import { ColorTheme } from './types';
+import { USER_THEME_SELECTION_KEY } from './constants';
 
 export const predefinedThemes: ColorTheme[] = [
   {
@@ -95,11 +96,11 @@ export function getThemeById(id: string): ColorTheme {
 }
 
 export function saveThemeToStorage(theme: ColorTheme): void {
-  localStorage.setItem('selectedTheme', JSON.stringify(theme));
+  localStorage.setItem(USER_THEME_SELECTION_KEY, JSON.stringify(theme));
 }
 
 export function getThemeFromStorage(): ColorTheme {
-  const savedTheme = localStorage.getItem('selectedTheme');
+  const savedTheme = localStorage.getItem(USER_THEME_SELECTION_KEY);
   if (savedTheme) {
     const parsed = JSON.parse(savedTheme);
     // Проверяем, что сохраненная тема валидна

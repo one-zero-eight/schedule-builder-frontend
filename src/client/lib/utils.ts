@@ -1,4 +1,5 @@
 import { CollisionType, Conflict } from './types';
+import { IGNORED_CONFLICTS_KEY } from './constants';
 
 export function formatTimeForMoscow(timeString: string): string {
   // Accepts time strings like: "17:33:22.719Z" and converts them to more concise time in Moscow timezone: "20:33"
@@ -38,7 +39,7 @@ export function collisionTypeToDisplayText(type: CollisionType): string {
 export function groupNameToDisplayText(name: string | string[]): string {
   if (Array.isArray(name)) {
     if (name.length === 0) {
-      return `EMPTY ARRAY!`;
+      return 'EMPTY ARRAY!';
     }
 
     return `${name[0]}...`;
@@ -58,7 +59,6 @@ export function getLengthOf2DArray(array: unknown[][]): number {
 }
 
 // Функции для работы с игнорируемыми конфликтами
-const IGNORED_CONFLICTS_KEY = 'ignored_conflicts';
 
 export function getConflictId(conflict: Conflict): string {
   // Создаем уникальный ID на основе свойств конфликта

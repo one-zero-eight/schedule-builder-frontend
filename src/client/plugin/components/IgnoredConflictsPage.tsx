@@ -8,6 +8,8 @@ import {
 import Card from './LessonCard';
 import innohassleSvg from '../innohassle.svg';
 
+import { INNOHASSLE_URL } from '../../lib/constants';
+
 interface IgnoredConflictsPageProps {
   onBack: () => void;
   conflicts: Conflict[][];
@@ -104,7 +106,7 @@ export default function IgnoredConflictsPage({
       )}
 
       <footer className="flex flex-col items-center mt-auto select-none">
-        <a href="https://innohassle.ru" target="_blank">
+        <a href={INNOHASSLE_URL} target="_blank">
           <img
             src={innohassleSvg}
             width={48}

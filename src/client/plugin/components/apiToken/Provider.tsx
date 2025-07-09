@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { type ApiContextI } from '../../contexts/apiTokenContext';
 import apiContext from '../../contexts/apiTokenContext';
-import { TOKEN_EXPIRY_DAYS } from '../../../lib/constants';
+import { TOKEN_EXPIRY_DAYS, CACHED_AUTH_TOKEN } from '../../../lib/constants';
 import { millisecondsToDays } from '../../../lib/utils';
 
 type tokenStorageType = {
@@ -16,7 +16,7 @@ export default function ApiTokenProvider({
   children: React.ReactNode;
 }) {
   const [token, setToken] = useState<ApiContextI['token']>(() => {
-    const storage = localStorage.getItem('saved-api-token');
+    const storage = localStorage.getItem(CACHED_AUTH_TOKEN);
     if (storage == null) return undefined;
 
     let received: tokenStorageType;
@@ -31,7 +31,7 @@ export default function ApiTokenProvider({
     const daysBetween = millisecondsToDays(timeDiffInMilliseconds);
 
     if (daysBetween >= TOKEN_EXPIRY_DAYS) {
-      localStorage.removeItem('saved-api-token');
+      localStorage.removeItem(CACHED_AUTH_TOKEN);
       return undefined;
     }
 
@@ -40,7 +40,7 @@ export default function ApiTokenProvider({
 
   function updateToken(newToken: string) {
     localStorage.setItem(
-      'saved-api-token',
+      CACHED_AUTH_TOKEN,
       JSON.stringify({
         token: newToken,
         savedAt: new Date().toISOString(),
