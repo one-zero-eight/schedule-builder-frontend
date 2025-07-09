@@ -1,8 +1,8 @@
 interface SpinnerProps {
-    color?: string;
+  color?: string;
 }
 
-export default function Spinner({ color = "innohassle" }: SpinnerProps) {
+export default function Spinner({ color = 'innohassle' }: SpinnerProps) {
   return (
     <svg
       viewBox="0 0 32 32"

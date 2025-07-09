@@ -91,29 +91,22 @@ export const predefinedThemes: ColorTheme[] = [
 export const defaultTheme = predefinedThemes[0]; // Dark Mode
 
 export function getThemeById(id: string): ColorTheme {
-  return predefinedThemes.find(theme => theme.id === id) || defaultTheme;
+  return predefinedThemes.find((theme) => theme.id === id) || defaultTheme;
 }
 
 export function saveThemeToStorage(theme: ColorTheme): void {
-  try {
-    localStorage.setItem('selectedTheme', JSON.stringify(theme));
-  } catch (error) {
-    console.error('Error saving theme to localStorage:', error);
-  }
+  localStorage.setItem('selectedTheme', JSON.stringify(theme));
 }
 
 export function getThemeFromStorage(): ColorTheme {
-  try {
-    const savedTheme = localStorage.getItem('selectedTheme');
-    if (savedTheme) {
-      const parsed = JSON.parse(savedTheme);
-      // Проверяем, что сохраненная тема валидна
-      if (parsed.id && parsed.colors) {
-        return parsed;
-      }
+  const savedTheme = localStorage.getItem('selectedTheme');
+  if (savedTheme) {
+    const parsed = JSON.parse(savedTheme);
+    // Проверяем, что сохраненная тема валидна
+    if (parsed.id && parsed.colors) {
+      return parsed;
     }
-  } catch (error) {
-    console.error('Error reading theme from localStorage:', error);
   }
+
   return defaultTheme;
-} 
+}

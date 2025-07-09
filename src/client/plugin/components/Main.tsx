@@ -12,7 +12,7 @@ import {
   filterIgnoredConflicts,
   getIgnoredConflictIds,
 } from '../../lib/utils';
-import APIForm from './apiToken/form';
+import APIForm from './apiToken/Form';
 import apiContext from '../contexts/apiTokenContext';
 import IgnoredConflictsPage from './IgnoredConflictsPage';
 import useTheme from '../hooks/useTheme';
@@ -22,8 +22,8 @@ import ThemeSettings from './ThemeSettings';
 import LoadingButton from './LoadingButton';
 import ErrorText from './ErrorText';
 import Header from '../pages/main/Header';
-import useAPI from '../hooks/queryApi';
-import getAllCollisions from '../../lib/api/apis';
+import useAPI from '../hooks/useAPI';
+import getAllCollisions from '../../lib/api/endpoints';
 
 function MainContent() {
   const [callAPI, requestState] = useAPI(getAllCollisions, []);
