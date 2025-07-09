@@ -65,3 +65,5 @@ export type Conflict =
   | OutlookConflict;
 
 export type ConflictResponse = Conflict[][];
+
+export type RouteLink = '/' | '/settings' | '/ignored';
