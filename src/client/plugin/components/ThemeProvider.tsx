@@ -15,8 +15,6 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
   const [currentTheme, setCurrentTheme] = useState<ColorTheme>(
     getThemeFromStorage()
   );
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-
   const setTheme = (theme: ColorTheme) => {
     setCurrentTheme(theme);
     saveThemeToStorage(theme);
@@ -69,8 +67,6 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
         currentTheme,
         setTheme,
         predefinedThemes,
-        isSettingsOpen,
-        setIsSettingsOpen,
       }}
     >
       {children}

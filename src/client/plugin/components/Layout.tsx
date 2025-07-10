@@ -7,14 +7,16 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div>
-      <h1>Hello there!</h1>
+    <main className="text-center text-white flex flex-col gap-3 h-full">
       <nav>
         <Link href="/">Go to home</Link>
         <Link href="/settings">Go to settings</Link>
         <Link href="/ignored">Go to conflicts</Link>
       </nav>
+      <h1>
+        InNo<span className="text-innohassle">Hassle</span> SCR
+      </h1>
       {children}
-    </div>
+    </main>
   );
 }

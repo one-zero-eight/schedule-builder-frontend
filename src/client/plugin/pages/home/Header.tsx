@@ -3,9 +3,6 @@ import { INNOHASSLE_TOKEN_URL } from '../../../lib/constants';
 export default function Header() {
   return (
     <div>
-      <h1>
-        InNo<span className="text-innohassle">Hassle</span> SCR
-      </h1>
       <p>To test the compatibility of the schedule:</p>
       <ol className="list-decimal text-start">
         <li>

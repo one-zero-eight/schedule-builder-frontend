@@ -1,25 +1,21 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Conflict } from '../../lib/types';
+import { Conflict } from '../../../lib/types';
 import {
   getIgnoredConflictIds,
   removeIgnoredConflict,
   getConflictId,
-} from '../../lib/utils';
-import Card from './LessonCard';
-import innohassleSvg from '../innohassle.svg';
+} from '../../../lib/utils';
+import Card from '../../components/LessonCard';
+import innohassleSvg from '../../innohassle.svg';
 
-import { INNOHASSLE_URL } from '../../lib/constants';
+import { INNOHASSLE_URL } from '../../../lib/constants';
+import useConflicts from '../../hooks/useConflicts';
 
-interface IgnoredConflictsPageProps {
-  onBack: () => void;
-  conflicts: Conflict[][];
-}
-
-export default function IgnoredConflictsPage({
-  onBack,
-  conflicts,
-}: IgnoredConflictsPageProps) {
+export default function IgnoredConflictsPage() {
   const [ignoredConflicts, setIgnoredConflicts] = useState<Conflict[][]>([]);
+
+  const da = useConflicts();
+  const conflicts = da.conflicts.payload;
 
   // Получаем игнорируемые конфликты
   const getIgnoredConflicts = useCallback(() => {
@@ -61,19 +57,6 @@ export default function IgnoredConflictsPage({
 
   return (
     <div className="text-center text-white flex flex-col gap-3 h-full">
-      <div className="flex items-center justify-between">
-        <button
-          onClick={onBack}
-          className="px-4 py-2 text-sm bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
-        >
-          ← Back
-        </button>
-        <h1>
-          InNo<span className="text-innohassle">Hassle</span> SCR
-        </h1>
-        <div className="w-20"></div> {/* Spacer for centering */}
-      </div>
-
       <h2 className="text-xl font-semibold">Ignored Conflicts</h2>
 
       {totalIgnored > 0 ? (

@@ -1,8 +1,7 @@
-import { useContext } from 'react';
-import apiContext from '../../contexts/apiTokenContext';
+import useToken from '../../hooks/useToken';
 
 export default function APIForm() {
-  const { token, updateToken } = useContext(apiContext);
+  const { token, updateToken } = useToken();
 
   return (
     <input
