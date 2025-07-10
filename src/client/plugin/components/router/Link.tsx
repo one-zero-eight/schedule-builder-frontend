@@ -16,7 +16,9 @@ export default function Link({
   className,
   ...props
 }: LinkProps) {
-  const { navigate } = useRouter();
+  const { navigate, location } = useRouter();
+
+  const isActive = location === href;
 
   return (
     <a
@@ -25,6 +27,7 @@ export default function Link({
       {...props}
     >
       {children}
+      {isActive && '!'}
     </a>
   );
 }
