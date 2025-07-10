@@ -51,8 +51,6 @@ export default function Home() {
     setIgnoredConflicts([...ignoredConflicts]);
   }, [ignoredConflicts]);
 
-  console.log('Rerender!!!');
-
   return (
     <>
       <Header />
@@ -140,7 +138,7 @@ export default function Home() {
 
           {hasIgnoredConflicts && (
             <Link
-              className="text-sm text-textSecondary hover:text-text transition-colors"
+              className="border-none text-sm text-textSecondary hover:text-text transition-colors"
               href="/ignored"
             >
               Show Ignored Conflicts

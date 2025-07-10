@@ -17,17 +17,17 @@ export default function Link({
   ...props
 }: LinkProps) {
   const { navigate, location } = useRouter();
-
   const isActive = location === href;
 
   return (
     <a
-      className={`cursor-pointer ${className || ''}`}
+      className={`flex flex-col justify-center border py-1 px-2 rounded-md cursor-pointer ${
+        isActive ? 'font-bold' : ''
+      } ${className || ''}`}
       onClick={() => navigate(href)}
       {...props}
     >
       {children}
-      {isActive && '!'}
     </a>
   );
 }
