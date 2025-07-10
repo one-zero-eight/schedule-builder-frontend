@@ -1,13 +1,10 @@
-import {
-  onOpen,
-  openPlugin,
-} from './ui';
+import { onOpen, openPlugin } from './ui';
 
 import {
   fillE2FieldWith,
   getSpreadsheetID,
-  selectTheRangeForUser
-} from "./custom"
+  selectTheRangeForUser,
+} from './custom';
 
 // Public functions must be exported as named exports
 // Если здесь не будет экспорта, то будет писать к примеру "Script function not found: onOpen"
@@ -17,5 +14,5 @@ export {
   openPlugin,
   fillE2FieldWith,
   getSpreadsheetID,
-  selectTheRangeForUser
+  selectTheRangeForUser,
 };

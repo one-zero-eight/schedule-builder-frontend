@@ -4,17 +4,13 @@ export const filterConflicts = (
   conflicts: ConflictResponse,
   activeFilter: CollisionType | 'all'
 ): ConflictResponse => {
-  if (activeFilter == "all") return conflicts
+  if (activeFilter === 'all') {
+    return conflicts;
+  }
 
-  return conflicts.filter(obj => {
-    for (const slot of obj) {
-      if (slot.collision_type == activeFilter) {
-        return true
-      }
-    }
-
-    return false;
-  })
+  return conflicts.filter((obj) => {
+    return obj.some((slot) => slot.collision_type === activeFilter);
+  });
 };
 
 export const getFilterOptions = (conflicts: ConflictResponse) => {
@@ -26,7 +22,7 @@ export const getFilterOptions = (conflicts: ConflictResponse) => {
   };
 
   conflicts.flat().forEach((conflict) => {
-    typeCounts[conflict.collision_type]++;
+    typeCounts[conflict.collision_type] += 1;
   });
 
   const totalIssues = conflicts.flat().length;

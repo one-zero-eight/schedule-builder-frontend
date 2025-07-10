@@ -1,6 +1,6 @@
 export const onOpen = () => {
   const menu = SpreadsheetApp.getUi()
-    .createMenu("InNoHassle")
+    .createMenu('InNoHassle')
     .addItem('Open scheduling plugin', 'openPlugin');
 
   menu.addToUi();
@@ -8,6 +8,6 @@ export const onOpen = () => {
 
 export const openPlugin = () => {
   const html = HtmlService.createHtmlOutputFromFile('plugin');
-  html.setTitle("Schedule conflict resolver")
+  html.setTitle('Schedule conflict resolver');
   SpreadsheetApp.getUi().showSidebar(html);
 };

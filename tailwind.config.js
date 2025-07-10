@@ -8,8 +8,8 @@ module.exports = {
         highlight: '#6EC7F4',
       },
       fontFamily: {
-        sans: ['Manrope', 'sans-serif']
-      }
+        sans: ['Manrope', 'sans-serif'],
+      },
     },
   },
   variants: {
