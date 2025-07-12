@@ -20,6 +20,7 @@ import Card from '../../components/LessonCard';
 import { INNOHASSLE_URL } from '../../../lib/constants';
 import innohassleSvg from '../../innohassle.svg';
 import useConflicts from '../../hooks/useConflicts';
+import NoConflicts from '../../components/NoConflicts';
 
 export default function Home() {
   const { conflicts: payload, updateConflicts } = useConflicts();
@@ -66,7 +67,7 @@ export default function Home() {
       </LoadingButton>
       <ErrorText>{error}</ErrorText>
 
-      {totalIssues > 0 && (
+      {totalIssues > 0 &&  (
         <>
           <h3 className="font-semibold">Number of issues: {totalIssues}</h3>
 
@@ -147,20 +148,26 @@ export default function Home() {
         </>
       )}
 
-      <div className="flex flex-col gap-3 -mr-8">
-        {filteredConflicts.map((data, index) => (
-          <React.Fragment key={index}>
-            {data.map((data2, index2) => (
-              <Card
-                key={index * data.length + index2}
-                onIgnore={handleIgnoreConflict}
-                lesson={data2}
-                mode="ignore"
-              />
-            ))}
-            <hr className="py-2 border-highlight" />
-          </React.Fragment>
-        ))}
+      <div className="flex flex-col gap-3 ">
+        {
+          totalIssues == 0 ? (
+            <NoConflicts /> 
+          ) : (
+            filteredConflicts.map((data, index) => (
+              <React.Fragment key={index}>
+                {data.map((data2, index2) => (
+                  <Card
+                    key={index * data.length + index2}
+                    onIgnore={handleIgnoreConflict}
+                    lesson={data2}
+                    mode="ignore"
+                  />
+                ))}
+                <hr className="py-2 border-highlight" />
+              </React.Fragment>
+            ))
+          )
+        }
       </div>
 
       {totalIssues > 0 && filteredTotalIssues === 0 && (
