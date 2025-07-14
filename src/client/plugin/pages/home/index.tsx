@@ -21,6 +21,7 @@ import { INNOHASSLE_URL } from '../../../lib/constants';
 import innohassleSvg from '../../innohassle.svg';
 import useConflicts from '../../hooks/useConflicts';
 import NoConflicts from '../../components/NoConflicts';
+import { groupConflictsByCourse } from '../../../utils/unitByCourse';
 
 export default function Home() {
   const { conflicts: payload, updateConflicts } = useConflicts();
@@ -52,6 +53,8 @@ export default function Home() {
     setIgnoredConflicts([...ignoredConflicts]);
   }, [ignoredConflicts]);
 
+
+  const units = groupConflictsByCourse(filteredConflicts);
   return (
     <>
       <Header />
@@ -153,18 +156,30 @@ export default function Home() {
           totalIssues == 0 ? (
             <NoConflicts /> 
           ) : (
-            filteredConflicts.map((data, index) => (
-              <React.Fragment key={index}>
-                {data.map((data2, index2) => (
-                  <Card
-                    key={index * data.length + index2}
-                    onIgnore={handleIgnoreConflict}
-                    lesson={data2}
-                    mode="ignore"
-                  />
-                ))}
+            Object.entries(units).map(([courseName, courseConflictGroups]) => (
+              <div key={courseName} className="flex flex-col gap-3">
+                <h4 className="font-semibold text-lg text-highlight border-b border-highlight pb-2">
+                  {courseName}
+                </h4>
+                <div className="flex flex-col gap-3">
+                  {courseConflictGroups.map((conflictGroup, groupIndex) => (
+                    <div key={`${courseName}-group-${groupIndex}`} className="flex flex-col gap-2">
+                      {conflictGroup.map((conflict, conflictIndex) => (
+                        <Card
+                          key={`${courseName}-group-${groupIndex}-conflict-${conflictIndex}`}
+                          onIgnore={handleIgnoreConflict}
+                          lesson={conflict}
+                          mode="ignore"
+                        />
+                      ))}
+                      {groupIndex < courseConflictGroups.length - 1 && (
+                        <hr className="py-2 border-highlight" />
+                      )}
+                    </div>
+                  ))}
+                </div>
                 <hr className="py-2 border-highlight" />
-              </React.Fragment>
+              </div>
             ))
           )
         }
