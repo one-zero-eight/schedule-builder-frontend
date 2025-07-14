@@ -55,6 +55,37 @@ export default function IgnoredConflictsPage() {
     0
   );
 
+  // Группируем игнорируемые конфликты по курсам, сохраняя структуру групп
+  const groupIgnoredConflictsByCourse = (conflicts: Conflict[][]) => {
+    const coursesByConflict: { [key: string]: Conflict[][] } = {};
+    
+    conflicts.forEach((conflictGroup) => {
+      // Создаем множество уникальных курсов для этой группы конфликтов
+      const coursesInGroup = new Set<string>();
+      
+      conflictGroup.forEach((conflict) => {
+        const courseName = conflict.lesson_name
+          .replace("(tut)", "")
+          .replace(/\(lec\)/g, "")
+          .replace(/\(lab\)/g, "")
+          .trim();
+        coursesInGroup.add(courseName);
+      });
+      
+      // Добавляем эту группу конфликтов в каждый соответствующий курс
+      coursesInGroup.forEach((courseName) => {
+        if (!coursesByConflict[courseName]) {
+          coursesByConflict[courseName] = [];
+        }
+        coursesByConflict[courseName].push(conflictGroup);
+      });
+    });
+    
+    return coursesByConflict;
+  };
+
+  const ignoredUnits = groupIgnoredConflictsByCourse(ignoredConflicts);
+
   return (
     <div className="text-center text-white flex flex-col gap-3 h-full">
       <h2 className="text-xl font-semibold">Ignored Conflicts</h2>
@@ -64,17 +95,30 @@ export default function IgnoredConflictsPage() {
           <p className="text-subtle">Total ignored conflicts: {totalIgnored}</p>
 
           <div className="flex flex-col gap-3">
-            {ignoredConflicts.map((data, index) => (
-              <div key={index} className="flex flex-col gap-10">
-                {data.map((data2, index2) => (
-                  <div key={index * data.length + index2} className="relative">
-                    <Card
-                      lesson={data2}
-                      onIgnore={() => handleRestoreConflict(data2)}
-                      mode="restore"
-                    />
-                  </div>
-                ))}
+            {Object.entries(ignoredUnits).map(([courseName, courseConflictGroups]) => (
+              <div key={courseName} className="flex flex-col gap-3">
+                <h4 className="font-semibold text-lg text-highlight border-b border-highlight pb-2">
+                  {courseName}
+                </h4>
+                <div className="flex flex-col gap-3">
+                  {courseConflictGroups.map((conflictGroup, groupIndex) => (
+                    <div key={`${courseName}-group-${groupIndex}`} className="flex flex-col gap-2">
+                      {conflictGroup.map((conflict, conflictIndex) => (
+                        <div key={`${courseName}-group-${groupIndex}-conflict-${conflictIndex}`} className="relative">
+                          <Card
+                            lesson={conflict}
+                            onIgnore={() => handleRestoreConflict(conflict)}
+                            mode="restore"
+                          />
+                        </div>
+                      ))}
+                      {groupIndex < courseConflictGroups.length - 1 && (
+                        <hr className="py-2 border-highlight" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <hr className="py-2 border-highlight" />
               </div>
             ))}
           </div>
