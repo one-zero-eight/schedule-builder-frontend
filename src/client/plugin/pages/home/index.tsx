@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CollisionType, ConflictResponse } from '../../../lib/types';
 import APIForm from '../../components/apiToken/Form';
 import ErrorText from '../../components/ErrorText';
@@ -53,7 +53,6 @@ export default function Home() {
     setIgnoredConflicts([...ignoredConflicts]);
   }, [ignoredConflicts]);
 
-
   const units = groupConflictsByCourse(filteredConflicts);
   return (
     <>
@@ -70,7 +69,7 @@ export default function Home() {
       </LoadingButton>
       <ErrorText>{error}</ErrorText>
 
-      {totalIssues > 0 &&  (
+      {totalIssues > 0 && (
         <>
           <h3 className="font-semibold">Number of issues: {totalIssues}</h3>
 
@@ -152,37 +151,38 @@ export default function Home() {
       )}
 
       <div className="flex flex-col gap-3 ">
-        {
-          totalIssues == 0 ? (
-            <NoConflicts /> 
-          ) : (
-            Object.entries(units).map(([courseName, courseConflictGroups]) => (
-              <div key={courseName} className="flex flex-col gap-3">
-                <h4 className="font-semibold text-lg text-highlight border-b border-highlight pb-2">
-                  {courseName}
-                </h4>
-                <div className="flex flex-col gap-3">
-                  {courseConflictGroups.map((conflictGroup, groupIndex) => (
-                    <div key={`${courseName}-group-${groupIndex}`} className="flex flex-col gap-2">
-                      {conflictGroup.map((conflict, conflictIndex) => (
-                        <Card
-                          key={`${courseName}-group-${groupIndex}-conflict-${conflictIndex}`}
-                          onIgnore={handleIgnoreConflict}
-                          lesson={conflict}
-                          mode="ignore"
-                        />
-                      ))}
-                      {groupIndex < courseConflictGroups.length - 1 && (
-                        <hr className="py-2 border-highlight" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-                <hr className="py-2 border-highlight" />
+        {totalIssues == 0 ? (
+          <NoConflicts />
+        ) : (
+          Object.entries(units).map(([courseName, courseConflictGroups]) => (
+            <div key={courseName} className="flex flex-col gap-3">
+              <h4 className="font-semibold text-lg text-highlight border-b border-highlight pb-2">
+                {courseName}
+              </h4>
+              <div className="flex flex-col gap-3">
+                {courseConflictGroups.map((conflictGroup, groupIndex) => (
+                  <div
+                    key={`${courseName}-group-${groupIndex}`}
+                    className="flex flex-col gap-2"
+                  >
+                    {conflictGroup.map((conflict, conflictIndex) => (
+                      <Card
+                        key={`${courseName}-group-${groupIndex}-conflict-${conflictIndex}`}
+                        onIgnore={handleIgnoreConflict}
+                        lesson={conflict}
+                        mode="ignore"
+                      />
+                    ))}
+                    {groupIndex < courseConflictGroups.length - 1 && (
+                      <hr className="py-2 border-highlight" />
+                    )}
+                  </div>
+                ))}
               </div>
-            ))
-          )
-        }
+              <hr className="py-2 border-highlight" />
+            </div>
+          ))
+        )}
       </div>
 
       {totalIssues > 0 && filteredTotalIssues === 0 && (

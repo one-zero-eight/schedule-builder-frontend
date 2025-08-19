@@ -54,7 +54,11 @@ export default function LessonCard({
             {groupNameToDisplayText(lesson.group_name)}
           </p>
         )}
-        <p className="text-highlight">{lesson.teacher}</p>
+        <p className="text-highlight" title={lesson.teacher}>
+          {lesson.teacher.length > 30
+            ? lesson.teacher.slice(0, 30) + '…'
+            : lesson.teacher}
+        </p>
         <p className="select-text">
           {timeString} - {lesson.room}
         </p>
