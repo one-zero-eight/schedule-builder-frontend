@@ -7,7 +7,7 @@ export const onOpen = () => {
 };
 
 export const openPlugin = () => {
-  const html = HtmlService.createHtmlOutputFromFile('plugin');
+  const html = HtmlService.createHtmlOutputFromFile('innohassle-sidebar');
   html.setTitle('Schedule conflict resolver');
   SpreadsheetApp.getUi().showSidebar(html);
 };

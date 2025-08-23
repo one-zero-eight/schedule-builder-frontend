@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: Manrope, sans-serif;
+  --color-primary: #8c35f6;
+  --color-secondary: #5c20a6;
+  --color-accent: #f3f4f6;
+  --color-background: #ffffff;
+  --color-surface: #f9fafb;
+  --color-text: #1f2937;
+  --color-textSecondary: #6b7280;
+  --color-border: #d1d5db;
+  --color-error: #dc2626;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-icon-primary: #6b7280;
+  --color-icon-hover: #1f2937;
+  --color-icon-ignore: #dc2626;
+  --color-icon-ignore-hover: #fca5a5;
+  --color-icon-restore: #16a34a;
+  --color-icon-restore-hover: #86efac;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    accent-color: var(--color-primary);
+    @apply bg-surface
+  }
+  body {
+    @apply px-2 py-4 min-h-screen text-text
+  }
+}
+
+/* SVG Icon Color Management */
+.icon-select {
+  filter: brightness(0) saturate(100%) invert(67%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+  transition: filter 0.2s ease;
+}
+
+.icon-ignore {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(340deg) brightness(104%) contrast(97%);
+  transition: filter 0.2s ease;
+}
+
+.icon-restore {
+  filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+  transition: filter 0.2s ease;
+}
+
+/* Transition effects */
+.transition-colors {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+/* Dropdown filter options hover effects */
+.filter-option {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-option:hover {
+  background-color: var(--color-accent) !important;
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-option.active {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+  font-weight: 500;
+}
+
+.filter-option.active:hover {
+  background-color: var(--color-primary) !important;
+  filter: brightness(1.1);
+}
+
+/* Filter button hover effects */
+.filter-button {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.filter-button:hover {
+  background-color: var(--color-accent) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.filter-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

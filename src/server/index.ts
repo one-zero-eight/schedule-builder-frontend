@@ -4,6 +4,7 @@ import {
   fillE2FieldWith,
   getSpreadsheetID,
   selectTheRangeForUser,
+  getCurrentSheetName,
 } from './custom';
 
 // Public functions must be exported as named exports
@@ -15,4 +16,5 @@ export {
   fillE2FieldWith,
   getSpreadsheetID,
   selectTheRangeForUser,
+  getCurrentSheetName,
 };

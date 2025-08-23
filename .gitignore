@@ -1,24 +1,28 @@
-# npm
-node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# clasp files
-creds.json
+# dependencies
+/node_modules
 
-# certs
+# output
+/dist
+/build
+/coverage
+*.tsbuildinfo
+
+# secrets
+.env
+.env*.local
 *.pem
 certs/
-
-# build
-dist/
-
-# mac
-.DS_Store
-
-#secret
-.env
-
-# appsscript binding
+creds.json
 .clasp.json
+
+# editors
+.idea
+.vscode
+
+# misc
+.DS_Store
 
 # already pushed version for ...add scriptId here...
 .clasp.json.EXAMPLE

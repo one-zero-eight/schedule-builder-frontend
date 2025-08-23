@@ -19,3 +19,7 @@ export function selectTheRangeForUser(range: string) {
     .getRange(range);
   rangeObject.activate();
 }
+
+export function getCurrentSheetName(): string {
+  return SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getName();
+}

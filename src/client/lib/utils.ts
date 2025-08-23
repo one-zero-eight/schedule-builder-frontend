@@ -1,5 +1,5 @@
-import { CollisionType, Conflict } from './types';
-import { IGNORED_CONFLICTS_KEY } from './constants';
+import { SchemaIssue } from '../api/types';
+import { IGNORED_ISSUES_KEY } from './constants';
 
 export function formatTimeForMoscow(timeString: string): string {
   // Accepts time strings like: "17:33:22.719Z" and converts them to more concise time in Moscow timezone: "20:33"
@@ -21,74 +21,86 @@ export function formatTimeForMoscow(timeString: string): string {
   return `${hours}:${minutes}`;
 }
 
-export function collisionTypeToDisplayText(type: CollisionType): string {
-  switch (type) {
-    case CollisionType.CAPACITY:
-      return 'Capacity exceeded';
-    case CollisionType.ROOM:
-      return 'The room is taken';
-    case CollisionType.TEACHER:
-      return 'The teacher is busy';
-    case CollisionType.OUTLOOK:
-      return 'Collision with something in outlook';
-    default:
-      return 'Unhandled collision type!';
+export function formatStringOrList(
+  input: string | string[] | null,
+  separator: string = ' / '
+): string {
+  if (!input) {
+    return '';
   }
-}
-
-export function groupNameToDisplayText(name: string | string[]): string {
-  if (Array.isArray(name)) {
-    if (name.length === 0) {
-      return 'EMPTY ARRAY!';
-    }
-
-    return `${name[0]}...`;
+  if (Array.isArray(input)) {
+    return input.join(separator);
   }
-
-  return name;
+  return input;
 }
 
-export function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+// Helper functions to extract data from different issue types
+function getLessonFromConflict(conflict: SchemaIssue) {
+  if ('lesson' in conflict && conflict.lesson) {
+    return conflict.lesson;
+  }
+  // For RoomIssue, use the first lesson
+  if (
+    'lessons' in conflict &&
+    conflict.lessons &&
+    conflict.lessons.length > 0
+  ) {
+    return conflict.lessons[0];
+  }
+  return null;
 }
 
-export function getLengthOf2DArray(array: unknown[][]): number {
-  return array.reduce((total, row) => total + row.length, 0);
+function getRoomFromConflict(conflict: SchemaIssue): string | string[] | null {
+  if ('room' in conflict) {
+    return conflict.room;
+  }
+  const lesson = getLessonFromConflict(conflict);
+  return lesson?.room || null;
 }
 
-// Функции для работы с игнорируемыми конфликтами
+function getTeacherFromConflict(conflict: SchemaIssue): string {
+  if ('teacher' in conflict) {
+    return conflict.teacher;
+  }
+  const lesson = getLessonFromConflict(conflict);
+  return lesson?.teacher || '';
+}
 
-export function getConflictId(conflict: Conflict): string {
+export function getIssueId(issue: SchemaIssue): string {
+  const lesson = getLessonFromConflict(issue);
+  if (!lesson) return '';
+
+  const room = getRoomFromConflict(issue);
+  const teacher = getTeacherFromConflict(issue);
+
   // Создаем уникальный ID на основе свойств конфликта
-  const base = `${conflict.lesson_name}_${conflict.weekday}_${conflict.start_time}_${conflict.end_time}_${conflict.room}_${conflict.teacher}_${conflict.collision_type}`;
+  const base = `${lesson.lesson_name}_${lesson.weekday}_${lesson.start_time}_${lesson.end_time}_${room}_${teacher}_${issue.collision_type}`;
 
   // Добавляем дополнительные свойства в зависимости от типа конфликта
-  if ('excel_range' in conflict) {
-    return `${base}_${conflict.excel_range}`;
+  if (lesson.excel_range) {
+    return `${base}_${lesson.excel_range}`;
   }
 
   return base;
 }
 
-export function getIgnoredConflictIds(): string[] {
+export function getIgnoredIssuesIds(): string[] {
   try {
-    const ignored = localStorage.getItem(IGNORED_CONFLICTS_KEY);
+    const ignored = localStorage.getItem(IGNORED_ISSUES_KEY);
     return ignored ? JSON.parse(ignored) : [];
   } catch (error) {
     return [];
   }
 }
 
-export function addIgnoredConflict(conflict: Conflict): void {
+export function addIgnoredConflict(conflict: SchemaIssue): void {
   try {
-    const ignoredIds = getIgnoredConflictIds();
-    const conflictId = getConflictId(conflict);
+    const ignoredIds = getIgnoredIssuesIds();
+    const conflictId = getIssueId(conflict);
 
     if (!ignoredIds.includes(conflictId)) {
       ignoredIds.push(conflictId);
-      localStorage.setItem(IGNORED_CONFLICTS_KEY, JSON.stringify(ignoredIds));
+      localStorage.setItem(IGNORED_ISSUES_KEY, JSON.stringify(ignoredIds));
     }
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -96,36 +108,35 @@ export function addIgnoredConflict(conflict: Conflict): void {
   }
 }
 
-export function removeIgnoredConflict(conflict: Conflict): void {
+export function removeIgnoredConflict(conflict: SchemaIssue): void {
   try {
-    const ignoredIds = getIgnoredConflictIds();
-    const conflictId = getConflictId(conflict);
+    const ignoredIds = getIgnoredIssuesIds();
+    const conflictId = getIssueId(conflict);
     const filteredIds = ignoredIds.filter((id) => id !== conflictId);
 
-    localStorage.setItem(IGNORED_CONFLICTS_KEY, JSON.stringify(filteredIds));
+    localStorage.setItem(IGNORED_ISSUES_KEY, JSON.stringify(filteredIds));
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error removing ignored conflict from localStorage:', error);
   }
 }
 
-export function isConflictIgnored(conflict: Conflict): boolean {
-  const ignoredIds = getIgnoredConflictIds();
-  const conflictId = getConflictId(conflict);
+export function isConflictIgnored(conflict: SchemaIssue): boolean {
+  const ignoredIds = getIgnoredIssuesIds();
+  const conflictId = getIssueId(conflict);
   return ignoredIds.includes(conflictId);
 }
 
-export function filterIgnoredConflicts(conflicts: Conflict[][]): Conflict[][] {
-  return conflicts
-    .map((conflictGroup) =>
-      conflictGroup.filter((conflict) => !isConflictIgnored(conflict))
-    )
-    .filter((group) => group.length > 0);
+export function filterIgnoredIssues(conflicts: SchemaIssue[]): SchemaIssue[] {
+  return conflicts.filter((conflict) => !isConflictIgnored(conflict));
 }
 
 export function clearAllIgnoredConflicts(): void {
-  localStorage.removeItem(IGNORED_CONFLICTS_KEY);
+  localStorage.removeItem(IGNORED_ISSUES_KEY);
 }
+
+// Export helper functions for components
+export { getRoomFromConflict, getTeacherFromConflict };
 
 export function millisecondsToDays(milliseconds: number): number {
   return milliseconds / 1000 / 60 / 60 / 24;

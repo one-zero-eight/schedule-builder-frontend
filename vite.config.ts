@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-/* eslint-disable import/no-extraneous-dependencies */
 import { resolve } from 'path';
-import { BuildOptions, ServerOptions, build, defineConfig } from 'vite';
-import { existsSync, readFileSync } from 'fs';
+import { BuildOptions, build, defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { viteSingleFile } from 'vite-plugin-singlefile';
 import { writeFile } from 'fs/promises';
+import mkcert from 'vite-plugin-mkcert';
+import tailwindcss from '@tailwindcss/vite';
 
 const PORT = 3000;
 const clientRoot = './src/client';
@@ -18,41 +18,18 @@ const devServerWrapper = './dev/dev-server-wrapper.html';
 const clientEntrypoints = [
   {
     name: 'CLIENT - InNoHassle Scheduling Plugin',
-    filename: 'plugin',
-    template: 'plugin/index.html',
+    rootDir: 'sidebar',
+    template: 'sidebar/index.html',
+    output: 'innohassle-sidebar',
   },
 ];
 
-const keyPath = resolve(__dirname, './certs/key.pem');
-const certPath = resolve(__dirname, './certs/cert.pem');
-const pfxPath = resolve(__dirname, './certs/cert.pfx'); // if needed for Windows
-
-const devServerOptions: ServerOptions = {
-  port: PORT,
-};
-
-// use key and cert settings only if they are found
-if (existsSync(keyPath) && existsSync(certPath)) {
-  devServerOptions.https = {
-    key: readFileSync(resolve(__dirname, './certs/key.pem')),
-    cert: readFileSync(resolve(__dirname, './certs/cert.pem')),
-  };
-}
-
-// If mkcert -install cannot be used on Windows machines (in pipeline, for example), the
-// script at scripts/generate-cert.ps1 can be used to create a .pfx cert
-if (existsSync(pfxPath)) {
-  // use pfx file if it's found
-  devServerOptions.https = {
-    pfx: readFileSync(pfxPath),
-    passphrase: 'abc123',
-  };
-}
-
 const clientServeConfig = () =>
   defineConfig({
-    plugins: [react()],
-    server: devServerOptions,
+    plugins: [mkcert(), tailwindcss(), react()],
+    server: {
+      port: PORT,
+    },
     root: clientRoot,
   });
 
@@ -64,7 +41,11 @@ const clientBuildConfig = ({
   template: string;
 }) =>
   defineConfig({
-    plugins: [react(), viteSingleFile({ useRecommendedBuildConfig: true })],
+    plugins: [
+      tailwindcss(),
+      react(),
+      viteSingleFile({ useRecommendedBuildConfig: true }),
+    ],
     root: resolve(__dirname, clientRoot, clientEntrypointRoot),
     build: {
       sourcemap: false,
@@ -115,7 +96,7 @@ const serverBuildConfig: BuildOptions = {
   },
   rollupOptions: {
     output: {
-      entryFileNames: 'code.js',
+      entryFileNames: 'innohassle-code.js',
       extend: true,
       footer: (chunk) =>
         chunk.exports
@@ -132,7 +113,7 @@ const buildConfig = ({ mode }: { mode: string }) => {
       ...clientEntrypoints.map((entrypoint) => ({
         src: devServerWrapper,
         dest: './',
-        rename: `${entrypoint.filename}.html`,
+        rename: `${entrypoint.output}.html`,
         transform: (contents: string) =>
           contents
             .toString()
@@ -160,16 +141,17 @@ const buildConfig = ({ mode }: { mode: string }) => {
           // eslint-disable-next-line no-restricted-syntax
           for (const clientEntrypoint of clientEntrypoints) {
             console.log('Building client bundle for', clientEntrypoint.name);
+            console.log(clientEntrypoint.template);
             // eslint-disable-next-line no-await-in-loop
             const buildOutput = await build(
               clientBuildConfig({
-                clientEntrypointRoot: clientEntrypoint.filename,
+                clientEntrypointRoot: clientEntrypoint.rootDir,
                 template: clientEntrypoint.template,
               })
             );
             // eslint-disable-next-line no-await-in-loop
             await writeFile(
-              resolve(__dirname, outDir, `${clientEntrypoint.filename}.html`),
+              resolve(__dirname, outDir, `${clientEntrypoint.output}.html`),
               // @ts-expect-error - output is an array of RollupOutput
               buildOutput.output[0].source
             );

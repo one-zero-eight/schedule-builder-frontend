@@ -1,19 +1,21 @@
-import { CollisionType, ConflictResponse } from '../lib/types';
+import { SchemaIssue } from '../api/types';
+import { CollisionType } from '../lib/types';
 
-export const filterConflicts = (
-  conflicts: ConflictResponse,
+export const filterIssues = (
+  issues: SchemaIssue[],
   activeFilter: CollisionType | 'all'
-): ConflictResponse => {
+): SchemaIssue[] => {
   if (activeFilter === 'all') {
-    return conflicts;
+    return issues;
   }
 
-  return conflicts.filter((obj) => {
-    return obj.some((slot) => slot.collision_type === activeFilter);
+  return issues.filter((issue) => {
+    const type = issue.collision_type as string;
+    return type === activeFilter;
   });
 };
 
-export const getFilterOptions = (conflicts: ConflictResponse) => {
+export const getFilterOptions = (issues: SchemaIssue[]) => {
   const typeCounts = {
     [CollisionType.ROOM]: 0,
     [CollisionType.TEACHER]: 0,
@@ -21,11 +23,15 @@ export const getFilterOptions = (conflicts: ConflictResponse) => {
     [CollisionType.OUTLOOK]: 0,
   };
 
-  conflicts.flat().forEach((conflict) => {
-    typeCounts[conflict.collision_type] += 1;
+  issues.forEach((issue) => {
+    const type = issue.collision_type as string;
+    if (type === 'room') typeCounts[CollisionType.ROOM] += 1;
+    else if (type === 'teacher') typeCounts[CollisionType.TEACHER] += 1;
+    else if (type === 'capacity') typeCounts[CollisionType.CAPACITY] += 1;
+    else if (type === 'outlook') typeCounts[CollisionType.OUTLOOK] += 1;
   });
 
-  const totalIssues = conflicts.flat().length;
+  const totalIssues = issues.length;
 
   return [
     { value: 'all', label: 'All', count: totalIssues },

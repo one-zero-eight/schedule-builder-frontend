@@ -7,63 +7,44 @@ export enum CollisionType {
   OUTLOOK = 'outlook',
 }
 
-export interface ColorTheme {
-  id: string;
-  name: string;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    surface: string;
-    text: string;
-    textSecondary: string;
-    border: string;
-    error: string;
-    success: string;
-    warning: string;
-  };
+export type RouteLink = '/' | '/settings' | '/ignored';
+export type APIResponse<Payload> =
+  | {
+      success: true;
+      payload: Payload;
+    }
+  | {
+      success: false;
+      error: string;
+    };
+export type StateType<T> = {
+  step: string;
+  error: string;
+  isLoading: boolean;
+  payload: T;
+};
+// This is a typescript bug. The enum overshadowing itself.
+// eslint-disable-next-line no-shadow
+export enum ActionType {
+  REQUEST_IN_PROGRESS = 1,
+  REQUEST_SUCCESSFUL = 2,
+  REQUEST_FAILED = 3,
 }
 
-type ConflictingLesson = {
-  lesson_name: string;
-  weekday: string;
-  start_time: string;
-  end_time: string;
-  room: string;
-  teacher: string;
-  students_number: number;
-};
-
-export type CapacityConflict = ConflictingLesson & {
-  collision_type: CollisionType.CAPACITY;
-  group_name: string | string[];
-  excel_range: string;
-  room_capacity: number;
-};
-
-export type TeacherConflict = ConflictingLesson & {
-  collision_type: CollisionType.TEACHER;
-  group_name: string | string[];
-  excel_range: string;
-};
-
-export type RoomConflict = ConflictingLesson & {
-  collision_type: CollisionType.ROOM;
-  group_name: string | string[];
-  excel_range: string;
-};
-
-export type OutlookConflict = ConflictingLesson & {
-  collision_type: CollisionType.OUTLOOK;
-};
-
-export type Conflict =
-  | CapacityConflict
-  | TeacherConflict
-  | RoomConflict
-  | OutlookConflict;
-
-export type ConflictResponse = Conflict[][];
-
-export type RouteLink = '/' | '/settings' | '/ignored';
+export type Action<T> =
+  | {
+      type: ActionType.REQUEST_IN_PROGRESS;
+      step: string;
+    }
+  | {
+      type: ActionType.REQUEST_FAILED;
+      error: string;
+    }
+  | {
+      type: ActionType.REQUEST_SUCCESSFUL;
+      payload: T;
+    };
+export type APIFunction<T, Args extends unknown[]> = (
+  updateRequestState: (arg0: string) => void,
+  ...args: Args
+) => Promise<APIResponse<T>>;
