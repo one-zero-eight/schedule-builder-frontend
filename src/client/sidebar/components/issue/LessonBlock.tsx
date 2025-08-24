@@ -12,9 +12,9 @@ export function LessonBlock({
 }) {
   const [isGoogleBusy, setIsGoogleBusy] = useState(false);
 
-  async function selectCell(range: string) {
+  async function selectCell(sheetName: string | null, range: string) {
     setIsGoogleBusy(true);
-    await serverFunctions.selectTheRangeForUser(range);
+    await serverFunctions.selectTheRangeForUser(sheetName, range);
     setIsGoogleBusy(false);
   }
 
@@ -23,10 +23,11 @@ export function LessonBlock({
       {lesson.excel_range && (
         <button
           type="button"
-          disabled={isGoogleBusy}
           className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent transition-colors cursor-pointer"
-          onClick={() => selectCell(lesson.excel_range || '')}
-          title={`Select cell in spreadsheet (${lesson.excel_range})`}
+          onClick={() =>
+            selectCell(lesson.excel_sheet_name, lesson.excel_range || '')
+          }
+          title={`Select cell in spreadsheet (${lesson.excel_range} on '${lesson.excel_sheet_name}')`}
         >
           {isGoogleBusy ? (
             <Spinner />

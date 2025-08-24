@@ -13,11 +13,18 @@ export function getSpreadsheetID(): string {
   return id;
 }
 
-export function selectTheRangeForUser(range: string) {
-  const rangeObject = SpreadsheetApp.getActiveSpreadsheet()
-    .getActiveSheet()
-    .getRange(range);
-  rangeObject.activate();
+export function selectTheRangeForUser(sheetName: string | null, range: string) {
+  if (sheetName) {
+    const rangeObject = SpreadsheetApp.getActiveSpreadsheet()
+      .getSheetByName(sheetName)
+      .getRange(range);
+    rangeObject.activate();
+  } else {
+    const rangeObject = SpreadsheetApp.getActiveSpreadsheet()
+      .getActiveSheet()
+      .getRange(range);
+    rangeObject.activate();
+  }
 }
 
 export function getCurrentSheetName(): string {

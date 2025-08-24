@@ -9,19 +9,20 @@ export default async function getAllCollisions(
 ): Promise<APIResponse<SchemaIssue[]>> {
   onStatusChange('Requesting spreadsheet ID...');
   const spreadsheetID = await serverFunctions.getSpreadsheetID();
-  onStatusChange('Getting current sheet name...');
-  const sheetName = await serverFunctions.getCurrentSheetName();
 
   try {
     onStatusChange('Fetching collisions...');
-    const { response, data } = await scheduleBuilderFetch.GET(
+    const { response, data } = await scheduleBuilderFetch.POST(
       '/collisions/check',
       {
-        params: {
-          query: {
-            google_spreadsheet_id: spreadsheetID,
-            target_sheet_name: sheetName,
-          },
+        body: {
+          google_spreadsheet_id: spreadsheetID,
+          // TODO: Make this configurable in settings
+          target_sheet_names: ['1st block common (since 25/08)', 'Ru Programs'],
+          check_room_collisions: true,
+          check_teacher_collisions: true,
+          check_space_collisions: true,
+          check_outlook_collisions: true,
         },
         headers: { Authorization: `Bearer ${token}` },
       }

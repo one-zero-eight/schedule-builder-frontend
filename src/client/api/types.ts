@@ -11,10 +11,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Check Timetable Collisions */
-    get: operations['check_timetable_collisions_collisions_check_get'];
+    get?: never;
     put?: never;
-    post?: never;
+    /** Check Timetable Collisions */
+    post: operations['check_timetable_collisions_collisions_check_post'];
     delete?: never;
     options?: never;
     head?: never;
@@ -221,6 +221,33 @@ export interface components {
       needed_capacity: number;
       lesson: components['schemas']['LessonWithExcelCellsDTO'];
     };
+    /** CheckParameters */
+    CheckParameters: {
+      /** Google Spreadsheet Id */
+      google_spreadsheet_id: string;
+      /** Target Sheet Names */
+      target_sheet_names: string[];
+      /**
+       * Check Room Collisions
+       * @default true
+       */
+      check_room_collisions: boolean;
+      /**
+       * Check Teacher Collisions
+       * @default true
+       */
+      check_teacher_collisions: boolean;
+      /**
+       * Check Space Collisions
+       * @default true
+       */
+      check_space_collisions: boolean;
+      /**
+       * Check Outlook Collisions
+       * @default true
+       */
+      check_outlook_collisions: boolean;
+    };
     /** CheckResults */
     CheckResults: {
       /** Issues */
@@ -296,8 +323,13 @@ export interface components {
        */
       students_number: number;
       /**
+       * Excel Sheet Name
+       * @description Sheet name to which the lesson belongs
+       */
+      excel_sheet_name: string | null;
+      /**
        * Excel Range
-       * @description Range of the lessos: may be multiple cells, for example 'A1:A10'
+       * @description Range of the lesson: may be multiple cells, for example 'A1:A10'
        */
       excel_range: string | null;
     };
@@ -464,6 +496,7 @@ export interface components {
 }
 export type SchemaBookingDto = components['schemas']['BookingDTO'];
 export type SchemaCapacityIssue = components['schemas']['CapacityIssue'];
+export type SchemaCheckParameters = components['schemas']['CheckParameters'];
 export type SchemaCheckResults = components['schemas']['CheckResults'];
 export type SchemaHttpValidationError =
   components['schemas']['HTTPValidationError'];
@@ -481,21 +514,18 @@ export type SchemaTeachersData = components['schemas']['TeachersData'];
 export type SchemaValidationError = components['schemas']['ValidationError'];
 export type $defs = Record<string, never>;
 export interface operations {
-  check_timetable_collisions_collisions_check_get: {
+  check_timetable_collisions_collisions_check_post: {
     parameters: {
-      query: {
-        google_spreadsheet_id: string;
-        target_sheet_name: string;
-        check_room_collisions?: boolean;
-        check_teacher_collisions?: boolean;
-        check_space_collisions?: boolean;
-        check_outlook_collisions?: boolean;
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CheckParameters'];
+      };
+    };
     responses: {
       /** @description Timetable collisions */
       200: {
