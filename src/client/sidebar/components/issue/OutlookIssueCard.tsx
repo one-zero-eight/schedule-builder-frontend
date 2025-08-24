@@ -1,9 +1,5 @@
 import { SchemaOutlookIssue } from '../../../api/types';
-import {
-  addIgnoredConflict,
-  formatStringOrList,
-  removeIgnoredConflict,
-} from '../../../lib/utils';
+import { addIgnoredConflict, formatStringOrList, removeIgnoredConflict, } from '../../../lib/utils';
 import deleteBtn from '../../Delete Icon.svg';
 import { LessonBlock } from './LessonBlock';
 
@@ -33,12 +29,14 @@ export function OutlookIssueCard({
       {/* Issue title */}
       <div className="flex justify-between w-full px-2">
         <div className="flex items-center gap-2 mt-1 text-base font-bold">
-          The room {formatStringOrList(issue.lesson.room)} is booked in Outlook
+          The room{' '}
+          {formatStringOrList(issue.outlook_info.map((o) => o.room_id))} is
+          booked in Outlook
         </div>
 
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 hover:bg-accent transition-colors shrink-0 h-fit cursor-pointer"
+          className="rounded-lg p-0.5 size-8 hover:bg-accent shrink-0 h-fit cursor-pointer"
           onClick={handleAction}
           title={
             mode === 'ignore' ? 'Ignore this conflict' : 'Restore this conflict'
@@ -55,7 +53,9 @@ export function OutlookIssueCard({
       </div>
 
       {/* Related lesson */}
-      <LessonBlock lesson={issue.lesson} />
+      {issue.lessons.map((lesson, index) => (
+        <LessonBlock key={index} lesson={lesson} />
+      ))}
 
       {/* Bookings from Outlook */}
       <div className="overflow-x-auto flex gap-2 grow max-w-full">

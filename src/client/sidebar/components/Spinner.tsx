@@ -1,17 +1,17 @@
-interface SpinnerProps {
-  color?: string;
-}
+import { clsx } from 'clsx';
 
-export default function Spinner({ color = 'innohassle' }: SpinnerProps) {
+export function Spinner({ className }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 32 32"
       aria-label="Loading"
       role="status"
-      className="inline-block w-6 h-6 align-middle animate-spin"
+      className={clsx(
+        'inline-block w-6 h-6 align-middle animate-spin',
+        className
+      )}
     >
       <circle
-        className={`text-${color}`}
         style={{
           fill: 'none',
           strokeWidth: 3,

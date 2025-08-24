@@ -1,5 +1,10 @@
+import { clsx } from 'clsx';
 import { SchemaCapacityIssue } from '../../../api/types';
-import { addIgnoredConflict, removeIgnoredConflict } from '../../../lib/utils';
+import {
+  addIgnoredConflict,
+  formatStringOrList,
+  removeIgnoredConflict,
+} from '../../../lib/utils';
 import deleteBtn from '../../Delete Icon.svg';
 import { LessonBlock } from './LessonBlock';
 
@@ -37,7 +42,7 @@ export function CapacityIssueCard({
 
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 hover:bg-accent transition-colors shrink-0 h-fit cursor-pointer"
+          className="rounded-lg p-0.5 size-8 hover:bg-accent shrink-0 h-fit cursor-pointer"
           onClick={handleAction}
           title={
             mode === 'ignore' ? 'Ignore this conflict' : 'Restore this conflict'
@@ -55,13 +60,15 @@ export function CapacityIssueCard({
 
       {/* Information about capacity */}
       <div
-        className={`flex items-center gap-2 mt-1 text-xs ${
+        className={clsx(
+          'flex items-center gap-2 mt-1 text-xs w-fit px-2 py-1 rounded-lg font-semibold',
           isOverCapacity ? 'bg-red-600 text-white' : 'bg-yellow-600 text-black'
-        }`}
+        )}
       >
         {issue.room_capacity !== null
           ? `${issue.needed_capacity}/${issue.room_capacity}`
-          : `${issue.needed_capacity} needed`}
+          : `${issue.needed_capacity} needed`}{' '}
+        for room {formatStringOrList(issue.room)}
       </div>
 
       {/* Related lesson */}

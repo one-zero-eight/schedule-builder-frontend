@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { useCallback, useState } from 'react';
 import { SchemaIssue } from '../../../api/types';
 import { CollisionType } from '../../../lib/types';
@@ -10,13 +11,13 @@ import {
 } from '../../../utils/filterUtils';
 import APIForm from '../../components/apiToken/Form';
 import { IssueCard } from '../../components/issue/IssueCard';
-import LoadingButton from '../../components/LoadingButton';
+import { LoadingButton } from '../../components/LoadingButton';
 import Link from '../../components/router/Link';
 import useConflicts from '../../hooks/useConflicts';
-import SvgIconSmile from '../../Smile';
-import Header from './Header';
+import { SvgIconSmile } from '../../Smile';
+import { Header } from './Header';
 
-export default function Home() {
+export function MainPage() {
   const { issues: payload, updateIssues } = useConflicts();
   const { payload: issues, error, isLoading, step } = payload;
 
@@ -72,16 +73,14 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="p-4 w-full bg-surface rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:bg-accent transition-all text-text filter-button"
+                  className="p-4 w-full bg-surface rounded-[calc(0.5rem-1px)] text-left min-w-[200px] flex justify-between items-center hover:bg-accent text-text cursor-pointer"
                 >
                   <span>
                     {getActiveFilterLabel(activeFilter, filterOptions)} ({' '}
                     {filteredTotalIssues} )
                   </span>
                   <svg
-                    className={`w-4 h-4 transition-transform ${
-                      isDropdownOpen ? 'rotate-180' : ''
-                    }`}
+                    className={clsx('size-4', isDropdownOpen && 'rotate-180')}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -111,11 +110,12 @@ export default function Home() {
                               );
                               setIsDropdownOpen(false);
                             }}
-                            className={`filter-option w-full px-4 py-3 text-left ${
+                            className={clsx(
+                              'w-full px-4 py-3 text-left cursor-pointer',
                               activeFilter === option.value
-                                ? 'active'
-                                : 'text-text'
-                            }`}
+                                ? 'bg-primary text-white font-medium hover:bg-primary'
+                                : 'text-text hover:bg-accent'
+                            )}
                           >
                             {option.label} ({option.count})
                           </button>
@@ -135,7 +135,7 @@ export default function Home() {
 
           {hasIgnoredIssues && (
             <Link
-              className="border-none text-sm text-textSecondary hover:text-text transition-colors"
+              className="border-none text-sm text-textSecondary hover:text-text"
               href="/ignored"
             >
               Show Ignored Conflicts

@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { RouteLink } from '../../../lib/types';
 import useRouter from '../../hooks/useRouter';
 
@@ -21,9 +22,11 @@ export default function Link({
 
   return (
     <a
-      className={`text-primary flex flex-col justify-center border py-1 px-2 rounded-md cursor-pointer hover:text-secondary ${
-        isActive ? 'font-bold' : ''
-      } ${className || ''}`}
+      className={clsx(
+        'text-primary flex flex-col justify-center border py-1 px-2 rounded-md cursor-pointer hover:text-secondary',
+        isActive && 'font-bold',
+        className
+      )}
       onClick={() => navigate(href)}
       {...props}
     >

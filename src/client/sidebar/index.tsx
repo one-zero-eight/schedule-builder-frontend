@@ -1,14 +1,13 @@
 import { createRoot } from 'react-dom/client';
 import ApiTokenProvider from './components/apiToken/Provider';
 import './styles.css';
-import StateRouter from './components/router/StateRouter';
+import { IssuesProvider } from './components/IssuesProvider';
+import { Layout } from './components/Layout';
 import Route from './components/router/Route';
-
-import Layout from './components/Layout';
-import MainPage from './pages/home/index';
-import IgnoredPage from './pages/ignored/index';
-import SettingsPage from './pages/settings/index';
-import { IssuesProvider } from './components/IssuesProvider.tsx';
+import StateRouter from './components/router/StateRouter';
+import { MainPage } from './pages/home/index';
+import { IgnoredConflictsPage as IgnoredPage } from './pages/ignored/index';
+import { SettingsPage } from './pages/settings/index';
 
 const container = document.getElementById('app');
 if (!container) {

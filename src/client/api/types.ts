@@ -219,7 +219,7 @@ export interface components {
        * @description Needed capacity for the lesson (sum of all groups)
        */
       needed_capacity: number;
-      lesson: components['schemas']['LessonWithExcelCellsDTO'];
+      lesson: components['schemas']['Lesson'];
     };
     /** CheckParameters */
     CheckParameters: {
@@ -263,8 +263,8 @@ export interface components {
       | components['schemas']['RoomIssue']
       | components['schemas']['OutlookIssue']
       | components['schemas']['TeacherIssue'];
-    /** LessonWithExcelCellsDTO */
-    LessonWithExcelCellsDTO: {
+    /** Lesson */
+    Lesson: {
       /**
        * Lesson Name
        * @description Name of the lesson
@@ -293,25 +293,15 @@ export interface components {
        */
       room: string | string[] | null;
       /**
-       * Date On
-       * @description Specific dates with lessons
-       */
-      date_on: string | null;
-      /**
-       * Date Except
-       * @description Specific dates when there is no lessons
-       */
-      date_except: string[] | null;
-      /**
        * Teacher
        * @description Teacher on lesson
        */
-      teacher: string;
+      teacher: string | null;
       /**
-       * Teacher Email
-       * @description Email of teacher
+       * Course Name
+       * @description Name of the course
        */
-      teacher_email: string | null;
+      course_name: string | null;
       /**
        * Group Name
        * @description Name of the group or list of groups
@@ -323,8 +313,23 @@ export interface components {
        */
       students_number: number;
       /**
+       * Date On
+       * @description Specific dates with lessons
+       */
+      date_on: string[] | null;
+      /**
+       * Date Except
+       * @description Specific dates when there is no lessons
+       */
+      date_except: string[] | null;
+      /**
+       * Date From
+       * @description Date from which the lesson starts
+       */
+      date_from: string | null;
+      /**
        * Excel Sheet Name
-       * @description Sheet name to which the lesson belongs
+       * @description Sheet name to which the lesson belongs in Google Spreadsheet
        */
       excel_sheet_name: string | null;
       /**
@@ -335,12 +340,12 @@ export interface components {
     };
     /** OptionsData */
     OptionsData: {
-      semester: components['schemas']['SemesterOptions'] | null;
+      semester: components['schemas']['SemesterOptions-Output'] | null;
       teachers: components['schemas']['TeachersData'] | null;
     };
     /**
      * OutlookIssue
-     * @description Issue when there is a Outlook booking in the room at the same time as the lesson.
+     * @description Issue when there is a Outlook booking in the room at the same time as the lesson. Grouped by Outlook event title.
      */
     OutlookIssue: {
       /**
@@ -349,11 +354,66 @@ export interface components {
        */
       collision_type: OutlookIssueCollision_type;
       /**
+       * Outlook Event Title
+       * @description Title of the Outlook event
+       */
+      outlook_event_title: string;
+      /**
        * Outlook Info
-       * @description Outlook info about the booking in the room same time
+       * @description Outlook info about the bookings in the same time
        */
       outlook_info: components['schemas']['BookingDTO'][];
-      lesson: components['schemas']['LessonWithExcelCellsDTO'];
+      /**
+       * Lessons
+       * @description Lessons that are in conflict with the Outlook event
+       */
+      lessons: components['schemas']['Lesson'][];
+    };
+    /** Override */
+    'Override-Input': {
+      /**
+       * Groups
+       * @default []
+       */
+      groups: string[];
+      /**
+       * Courses
+       * @default []
+       */
+      courses: string[];
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
+    };
+    /** Override */
+    'Override-Output': {
+      /**
+       * Groups
+       * @default []
+       */
+      groups: string[];
+      /**
+       * Courses
+       * @default []
+       */
+      courses: string[];
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
     };
     /**
      * RoomDTO
@@ -416,10 +476,10 @@ export interface components {
        * Lessons
        * @description Lessons in the room at the same time
        */
-      lessons: components['schemas']['LessonWithExcelCellsDTO'][];
+      lessons: components['schemas']['Lesson'][];
     };
     /** SemesterOptions */
-    SemesterOptions: {
+    'SemesterOptions-Input': {
       /** Name */
       name: string;
       /**
@@ -432,6 +492,31 @@ export interface components {
        * Format: date
        */
       end_date: string;
+      /**
+       * Override
+       * @default []
+       */
+      override: components['schemas']['Override-Input'][];
+    };
+    /** SemesterOptions */
+    'SemesterOptions-Output': {
+      /** Name */
+      name: string;
+      /**
+       * Start Date
+       * Format: date
+       */
+      start_date: string;
+      /**
+       * End Date
+       * Format: date
+       */
+      end_date: string;
+      /**
+       * Override
+       * @default []
+       */
+      override: components['schemas']['Override-Output'][];
     };
     /** Teacher */
     Teacher: {
@@ -463,12 +548,12 @@ export interface components {
        * Teaching Lessons
        * @description Lessons of the teacher at the same time
        */
-      teaching_lessons: components['schemas']['LessonWithExcelCellsDTO'][];
+      teaching_lessons: components['schemas']['Lesson'][];
       /**
        * Studying Lessons
        * @description Lessons of the teacher as a student at the same time
        */
-      studying_lessons: components['schemas']['LessonWithExcelCellsDTO'][];
+      studying_lessons: components['schemas']['Lesson'][];
     };
     /** TeachersData */
     TeachersData: {
@@ -501,13 +586,17 @@ export type SchemaCheckResults = components['schemas']['CheckResults'];
 export type SchemaHttpValidationError =
   components['schemas']['HTTPValidationError'];
 export type SchemaIssue = components['schemas']['Issue'];
-export type SchemaLessonWithExcelCellsDto =
-  components['schemas']['LessonWithExcelCellsDTO'];
+export type SchemaLesson = components['schemas']['Lesson'];
 export type SchemaOptionsData = components['schemas']['OptionsData'];
 export type SchemaOutlookIssue = components['schemas']['OutlookIssue'];
+export type SchemaOverrideInput = components['schemas']['Override-Input'];
+export type SchemaOverrideOutput = components['schemas']['Override-Output'];
 export type SchemaRoomDto = components['schemas']['RoomDTO'];
 export type SchemaRoomIssue = components['schemas']['RoomIssue'];
-export type SchemaSemesterOptions = components['schemas']['SemesterOptions'];
+export type SchemaSemesterOptionsInput =
+  components['schemas']['SemesterOptions-Input'];
+export type SchemaSemesterOptionsOutput =
+  components['schemas']['SemesterOptions-Output'];
 export type SchemaTeacher = components['schemas']['Teacher'];
 export type SchemaTeacherIssue = components['schemas']['TeacherIssue'];
 export type SchemaTeachersData = components['schemas']['TeachersData'];
@@ -634,7 +723,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['SemesterOptions'];
+        'application/json': components['schemas']['SemesterOptions-Input'];
       };
     };
     responses: {
@@ -644,7 +733,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SemesterOptions'];
+          'application/json': components['schemas']['SemesterOptions-Output'];
         };
       };
       /** @description Validation Error */
@@ -673,7 +762,9 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['SemesterOptions'] | null;
+          'application/json':
+            | components['schemas']['SemesterOptions-Output']
+            | null;
         };
       };
     };

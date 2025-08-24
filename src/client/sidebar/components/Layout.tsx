@@ -1,13 +1,9 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 import { INNOHASSLE_URL } from '../../lib/constants';
 import innohassleSvg from '../innohassle.svg';
 import Link from './router/Link';
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export default function Layout({ children }: LayoutProps) {
+export function Layout({ children }: PropsWithChildren) {
   return (
     <main className="flex flex-col gap-3 h-full">
       <h1 className="text-2xl flex items-center justify-center">

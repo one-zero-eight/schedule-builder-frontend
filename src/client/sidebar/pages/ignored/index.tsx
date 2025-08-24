@@ -8,7 +8,7 @@ import {
 import { IssueCard } from '../../components/issue/IssueCard';
 import useConflicts from '../../hooks/useConflicts';
 
-export default function IgnoredConflictsPage() {
+export function IgnoredConflictsPage() {
   const [ignoredConflicts, setIgnoredConflicts] = useState<SchemaIssue[]>([]);
 
   const da = useConflicts();

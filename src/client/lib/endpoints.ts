@@ -1,4 +1,5 @@
 import { scheduleBuilderFetch } from '../api';
+import * as scheduleBuilderTypes from '../api/types';
 import { SchemaIssue } from '../api/types';
 import { serverFunctions } from './serverFunctions';
 import { APIResponse } from './types';
@@ -43,6 +44,135 @@ export default async function getAllCollisions(
     }
 
     return { success: true, payload: data.issues };
+  } catch (error) {
+    return { success: false, error: 'Something went wrong with the request' };
+  }
+}
+
+export async function getSemesterOptions(
+  token: string
+): Promise<
+  APIResponse<scheduleBuilderTypes.SchemaSemesterOptionsOutput | null>
+> {
+  try {
+    const { response, data } = await scheduleBuilderFetch.GET(
+      '/options/semester',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (!response.ok || data === undefined) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: 'The API token you provided is wrong',
+        };
+      }
+      return {
+        success: false,
+        error: `Backend sent ${response.status} status code =(`,
+      };
+    }
+
+    return { success: true, payload: data };
+  } catch (error) {
+    return { success: false, error: 'Something went wrong with the request' };
+  }
+}
+
+export async function setSemesterOptions(
+  semester: scheduleBuilderTypes.SchemaSemesterOptionsInput,
+  token: string
+): Promise<APIResponse<scheduleBuilderTypes.SchemaSemesterOptionsOutput>> {
+  try {
+    const { response, data } = await scheduleBuilderFetch.POST(
+      '/options/set-semester',
+      {
+        body: semester,
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (!response.ok || data === undefined) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: 'The API token you provided is wrong',
+        };
+      }
+      return {
+        success: false,
+        error: `Backend sent ${response.status} status code =(`,
+      };
+    }
+
+    return { success: true, payload: data };
+  } catch (error) {
+    return { success: false, error: 'Something went wrong with the request' };
+  }
+}
+
+export async function getTeachersOptions(
+  token: string
+): Promise<APIResponse<scheduleBuilderTypes.SchemaTeachersData | null>> {
+  try {
+    const { response, data } = await scheduleBuilderFetch.GET(
+      '/options/teachers',
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (!response.ok || data === undefined) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: 'The API token you provided is wrong',
+        };
+      }
+      return {
+        success: false,
+        error: `Backend sent ${response.status} status code =(`,
+      };
+    }
+
+    return { success: true, payload: data };
+  } catch (error) {
+    return { success: false, error: 'Something went wrong with the request' };
+  }
+}
+
+export async function setTeachersOptions(
+  teachersData: string,
+  token: string
+): Promise<APIResponse<number>> {
+  try {
+    const { response, data } = await scheduleBuilderFetch.POST(
+      '/options/set-teachers',
+      {
+        body: teachersData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'text/tab-separated-values',
+        },
+      }
+    );
+
+    if (!response.ok || data === undefined) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: 'The API token you provided is wrong',
+        };
+      }
+      return {
+        success: false,
+        error: `Backend sent ${response.status} status code =(`,
+      };
+    }
+
+    return { success: true, payload: data };
   } catch (error) {
     return { success: false, error: 'Something went wrong with the request' };
   }

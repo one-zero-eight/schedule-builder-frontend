@@ -1,5 +1,6 @@
 apis:
   schedule-builder:
     root: https://api.innohassle.ru/schedule-builder/staging-v0/openapi.json
+#    root: http://localhost:8012/openapi.json
     x-openapi-ts:
       output: ./src/client/api/types.ts

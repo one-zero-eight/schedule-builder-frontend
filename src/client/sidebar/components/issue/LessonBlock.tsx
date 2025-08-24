@@ -1,15 +1,11 @@
 import { useState } from 'react';
-import { SchemaLessonWithExcelCellsDto } from '../../../api/types';
+import { SchemaLesson } from '../../../api/types';
 import { serverFunctions } from '../../../lib/serverFunctions';
 import { formatStringOrList, formatTimeForMoscow } from '../../../lib/utils';
 import selectBtn from '../../Search Icon.svg';
-import Spinner from '../Spinner';
+import { Spinner } from '../Spinner';
 
-export function LessonBlock({
-  lesson,
-}: {
-  lesson: SchemaLessonWithExcelCellsDto;
-}) {
+export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
   const [isGoogleBusy, setIsGoogleBusy] = useState(false);
 
   async function selectCell(sheetName: string | null, range: string) {
@@ -23,14 +19,14 @@ export function LessonBlock({
       {lesson.excel_range && (
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent transition-colors cursor-pointer"
+          className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent cursor-pointer"
           onClick={() =>
             selectCell(lesson.excel_sheet_name, lesson.excel_range || '')
           }
           title={`Select cell in spreadsheet (${lesson.excel_range} on '${lesson.excel_sheet_name}')`}
         >
           {isGoogleBusy ? (
-            <Spinner />
+            <Spinner className="text-primary" />
           ) : (
             <img
               src={selectBtn}

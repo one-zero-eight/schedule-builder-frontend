@@ -34,7 +34,7 @@ export function TeacherIssueCard({
 
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 hover:bg-accent transition-colors shrink-0 h-fit cursor-pointer"
+          className="rounded-lg p-0.5 size-8 hover:bg-accent shrink-0 h-fit cursor-pointer"
           onClick={handleAction}
           title={
             mode === 'ignore' ? 'Ignore this conflict' : 'Restore this conflict'

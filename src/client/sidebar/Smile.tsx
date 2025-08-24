@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-const SvgIconSmile: React.FC<React.SVGProps<SVGElement>> = ({ className }) => (
+export const SvgIconSmile: React.FC<React.SVGProps<SVGElement>> = ({
+  className,
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="250"
@@ -20,5 +22,3 @@ const SvgIconSmile: React.FC<React.SVGProps<SVGElement>> = ({ className }) => (
     ></path>
   </svg>
 );
-
-export default SvgIconSmile;

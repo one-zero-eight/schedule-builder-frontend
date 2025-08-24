@@ -1,20 +1,27 @@
-import Spinner from './Spinner';
+import { PropsWithChildren } from 'react';
+import { Spinner } from './Spinner';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  isLoading: boolean;
-  loadingText: string;
-}
-
-export default function Button(props: ButtonProps) {
-  const LoadingText = (
-    <>
-      <Spinner color="white" />
-      <div aria-live="polite">{props.loadingText}</div>
-    </>
-  );
-
+export function LoadingButton({
+  isLoading,
+  loadingText,
+  children,
+  ...props
+}: PropsWithChildren<
+  {
+    isLoading: boolean;
+    loadingText: string;
+  } & React.ButtonHTMLAttributes<HTMLButtonElement>
+>) {
   return (
-    <button {...props}>{props.isLoading ? LoadingText : props.children}</button>
+    <button {...props}>
+      {isLoading ? (
+        <>
+          <Spinner className="text-white" />
+          <div aria-live="polite">{loadingText}</div>
+        </>
+      ) : (
+        children
+      )}
+    </button>
   );
 }

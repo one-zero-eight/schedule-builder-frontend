@@ -1,6 +1,6 @@
 import { INNOHASSLE_TOKEN_URL } from '../../../lib/constants';
 
-export default function Header() {
+export function Header() {
   return (
     <div>
       <p>To check the schedule for issues:</p>
