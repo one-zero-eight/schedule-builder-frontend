@@ -1,5 +1,9 @@
 import { SchemaOutlookIssue } from '../../../api/types';
-import { addIgnoredConflict, formatStringOrList, removeIgnoredConflict, } from '../../../lib/utils';
+import {
+  addIgnoredConflict,
+  formatStringOrList,
+  removeIgnoredConflict,
+} from '../../../lib/utils';
 import deleteBtn from '../../Delete Icon.svg';
 import { LessonBlock } from './LessonBlock';
 

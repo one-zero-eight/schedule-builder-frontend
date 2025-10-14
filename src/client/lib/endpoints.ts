@@ -6,7 +6,8 @@ import { APIResponse } from './types';
 
 export default async function getAllCollisions(
   onStatusChange: (arg0: string) => void,
-  token: string
+  token: string,
+  targetSheetNames: string[] = ['1st block common (since 25/08)', 'Ru Programs']
 ): Promise<APIResponse<SchemaIssue[]>> {
   onStatusChange('Requesting spreadsheet ID...');
   const spreadsheetID = await serverFunctions.getSpreadsheetID();
@@ -18,8 +19,7 @@ export default async function getAllCollisions(
       {
         body: {
           google_spreadsheet_id: spreadsheetID,
-          // TODO: Make this configurable in settings
-          target_sheet_names: ['1st block common (since 25/08)', 'Ru Programs'],
+          target_sheet_names: targetSheetNames,
           check_room_collisions: true,
           check_teacher_collisions: true,
           check_space_collisions: true,
@@ -176,4 +176,32 @@ export async function setTeachersOptions(
   } catch (error) {
     return { success: false, error: 'Something went wrong with the request' };
   }
+}
+
+export async function getAllIssues(
+  token: string,
+  targetSheetNames?: string[]
+): Promise<APIResponse<SchemaIssue[]>> {
+  // Get sheet names from localStorage if not provided
+  if (!targetSheetNames) {
+    try {
+      const stored = localStorage.getItem('schedule-builder-sheet-names');
+      if (stored) {
+        targetSheetNames = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Failed to parse sheet names from localStorage:', error);
+    }
+  }
+
+  // Fallback to default sheet names if none available
+  if (!targetSheetNames || targetSheetNames.length === 0) {
+    targetSheetNames = ['1st block common (since 25/08)', 'Ru Programs'];
+  }
+
+  return getAllCollisions(
+    (status: string) => console.log(status), // Simple status logger
+    token,
+    targetSheetNames
+  );
 }

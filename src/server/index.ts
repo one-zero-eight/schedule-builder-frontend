@@ -5,6 +5,7 @@ import {
   getSpreadsheetID,
   selectTheRangeForUser,
   getCurrentSheetName,
+  getAllSheetNames,
 } from './custom';
 
 // Public functions must be exported as named exports
@@ -17,4 +18,5 @@ export {
   getSpreadsheetID,
   selectTheRangeForUser,
   getCurrentSheetName,
+  getAllSheetNames,
 };
