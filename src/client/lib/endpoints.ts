@@ -19,7 +19,7 @@ export default async function getAllCollisions(
         body: {
           google_spreadsheet_id: spreadsheetID,
           // TODO: Make this configurable in settings
-          target_sheet_names: ['1st block common (since 25/08)', 'Ru Programs'],
+          target_sheet_names: ['2nd block common (since 27/10)', 'Ru Programs'],
           check_room_collisions: true,
           check_teacher_collisions: true,
           check_space_collisions: true,
