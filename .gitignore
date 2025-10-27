@@ -16,6 +16,7 @@
 certs/
 creds.json
 .clasp.json
+.clasp.json.prod
 
 # editors
 .idea
@@ -23,6 +24,3 @@ creds.json
 
 # misc
 .DS_Store
-
-# already pushed version for ...add scriptId here...
-.clasp.json.EXAMPLE

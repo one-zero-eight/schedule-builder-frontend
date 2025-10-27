@@ -13,7 +13,7 @@
     "build:dev": "vite build --mode development",
     "build": "tsc && vite build --mode production",
     "deploy:dev": "pnpm run build:dev && pnpm run push",
-    "deploy": "pnpm run build && pnpm run push",
+    "deploy": "rimraf dist dist-cp && clasp pull && mv dist dist-cp && pnpm run build && cp dist/innohassle-* dist-cp/ && rimraf dist && mv dist-cp dist && pnpm run push",
     "start": "pnpm run deploy:dev && pnpm run dev",
     "gen:api": "pnpm exec openapi-typescript --root-types --enum"
   },
@@ -61,6 +61,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^6.0.1",
     "rollup": "^4.18.0",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.2.2",
