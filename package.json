@@ -15,7 +15,7 @@
     "deploy:dev": "pnpm run build:dev && pnpm run push",
     "deploy": "rimraf dist dist-cp && clasp pull && mv dist dist-cp && pnpm run build && cp dist/innohassle-* dist-cp/ && rimraf dist && mv dist-cp dist && pnpm run push",
     "start": "pnpm run deploy:dev && pnpm run dev",
-    "gen:api": "pnpm exec openapi-typescript --root-types --enum"
+    "gen:api": "pnpm exec openapi-typescript https://api.innohassle.ru/schedule-builder/v0/openapi.json --root-types --enum --output ./src/client/api/types.ts"
   },
   "dependencies": {
     "@babel/preset-env": "^7.24.6",
@@ -45,6 +45,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "fuse.js": "^7.1.0",
     "gas-client": "^1.2.0",
     "gas-types-detailed": "^1.1.2",
     "openapi-fetch": "^0.14.0",

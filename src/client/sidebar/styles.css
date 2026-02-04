@@ -30,6 +30,9 @@
   body {
     @apply px-2 py-4 min-h-screen text-text
   }
+  button {
+    @apply cursor-pointer
+  }
 }
 
 /* SVG Icon Color Management */

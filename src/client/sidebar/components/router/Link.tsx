@@ -23,7 +23,7 @@ export default function Link({
   return (
     <a
       className={clsx(
-        'text-primary flex flex-col justify-center border py-1 px-2 rounded-md cursor-pointer hover:text-secondary',
+        'text-primary flex flex-col justify-center border py-1 px-2 rounded-md hover:text-secondary',
         isActive && 'font-bold',
         className
       )}

@@ -19,7 +19,7 @@ export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
       {lesson.excel_range && (
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent cursor-pointer"
+          className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent"
           onClick={() =>
             selectCell(lesson.excel_sheet_name, lesson.excel_range || '')
           }

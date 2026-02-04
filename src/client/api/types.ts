@@ -4,859 +4,855 @@
  */
 
 export interface paths {
-  '/collisions/check': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/collisions/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check Timetable Collisions */
+        post: operations["check_timetable_collisions_collisions_check_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Check Timetable Collisions */
-    post: operations['check_timetable_collisions_collisions_check_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/dev/bookings': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/options/set-semester": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Set Semester */
+        post: operations["set_semester_options_set_semester_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get All Bookings */
-    get: operations['get_all_bookings_dev_bookings_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/dev/bookings/{room_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/options/semester": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Semester */
+        get: operations["get_semester_options_semester_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get Bookings */
-    get: operations['get_bookings_dev_bookings__room_id__get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/dev/rooms': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/options/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get All Options */
+        get: operations["get_all_options_options__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get Rooms */
-    get: operations['get_rooms_dev_rooms_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/options/set-semester': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/options/set-teachers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Teachers
+         * @description Upload teachers data from TSV (tab-separated values).
+         *
+         *     Expected columns (case-insensitive):
+         *     - Name - teacher's full name in English
+         *     - Russian Name (or ФИО/Имя) - teacher's full name in Russian
+         *     - Alias (or Telegram) - short name or telegram handle
+         *     - Email - email address
+         *     - Student Group (or Student?) - student group code (e.g. "B24-CSE-05", "M25-SE-01")
+         *
+         *     Example:
+         *     ```
+         *     Name        Russian Name    Alias   Email   Student Group
+         *     Ivan Ivanov Иванов Иван Иванович    @ivanov ivanov@example.com
+         *     Petr Petrov Петров Петр Петрович    -       petrov@example.com      B24-CSE-05
+         *     ```
+         */
+        post: operations["set_teachers_options_set_teachers_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Set Semester */
-    post: operations['set_semester_options_set_semester_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/options/semester': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/options/teachers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Teachers */
+        get: operations["get_teachers_options_teachers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get Semester */
-    get: operations['get_semester_options_semester_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/options/': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/dev/bookings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get All Bookings */
+        get: operations["get_all_bookings_dev_bookings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get All Options */
-    get: operations['get_all_options_options__get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/options/set-teachers': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/dev/bookings/{room_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Bookings */
+        get: operations["get_bookings_dev_bookings__room_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /** Set Teachers */
-    post: operations['set_teachers_options_set_teachers_post'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/options/teachers': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/dev/rooms": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Rooms */
+        get: operations["get_rooms_dev_rooms_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Get Teachers */
-    get: operations['get_teachers_options_teachers_get'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    /**
-     * BookingDTO
-     * @description Booking description
-     */
-    BookingDTO: {
-      /**
-       * Room Id
-       * @description ID of the room
-       */
-      room_id: string;
-      /**
-       * Event Id
-       * @description ID of the event
-       */
-      event_id: string | null;
-      /**
-       * Title
-       * @description Title of the booking
-       */
-      title: string;
-      /**
-       * Start Time
-       * Format: date-time
-       * @description Start time of booking
-       */
-      start_time: string;
-      /**
-       * End Time
-       * Format: date-time
-       * @description End time of booking
-       */
-      end_time: string;
+    schemas: {
+        /**
+         * BookingDTO
+         * @description Booking description
+         */
+        BookingDTO: {
+            /**
+             * Room Id
+             * @description ID of the room
+             */
+            room_id: string;
+            /**
+             * Event Id
+             * @description ID of the event
+             */
+            event_id: string | null;
+            /**
+             * Title
+             * @description Title of the booking
+             */
+            title: string;
+            /**
+             * Start Time
+             * Format: date-time
+             * @description Start time of booking
+             */
+            start_time: string;
+            /**
+             * End Time
+             * Format: date-time
+             * @description End time of booking
+             */
+            end_time: string;
+        };
+        /**
+         * CapacityIssue
+         * @description Issue when there is not enough places in the room for the lesson.
+         */
+        CapacityIssue: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            collision_type: CapacityIssueCollision_type;
+            /**
+             * Room
+             * @description Room name
+             */
+            room: string | string[];
+            /**
+             * Room Capacity
+             * @description Assumed capacity of the room
+             */
+            room_capacity: number | null;
+            /**
+             * Needed Capacity
+             * @description Needed capacity for the lesson (sum of all groups)
+             */
+            needed_capacity: number;
+            lesson: components["schemas"]["Lesson"];
+        };
+        /** CheckParameters */
+        CheckParameters: {
+            /**
+             * Check Room Collisions
+             * @default true
+             */
+            check_room_collisions: boolean;
+            /**
+             * Check Teacher Collisions
+             * @default true
+             */
+            check_teacher_collisions: boolean;
+            /**
+             * Check Space Collisions
+             * @default true
+             */
+            check_space_collisions: boolean;
+            /**
+             * Check Outlook Collisions
+             * @default true
+             */
+            check_outlook_collisions: boolean;
+        };
+        /** CheckResults */
+        CheckResults: {
+            /** Issues */
+            issues: components["schemas"]["Issue"][];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
+        Issue: components["schemas"]["CapacityIssue"] | components["schemas"]["RoomIssue"] | components["schemas"]["OutlookIssue"] | components["schemas"]["TeacherIssue"];
+        /** Lesson */
+        Lesson: {
+            /**
+             * Lesson Name
+             * @description Name of the lesson
+             */
+            lesson_name: string;
+            /**
+             * Weekday
+             * @description Weekday of a lesson
+             */
+            weekday: string | null;
+            /**
+             * Start Time
+             * Format: time
+             * @description Start time of lesson
+             */
+            start_time: string;
+            /**
+             * End Time
+             * Format: time
+             * @description End time of lesson
+             */
+            end_time: string;
+            /**
+             * Room
+             * @description Room for lesson, None - TBA, if list - multiple rooms simultaneously
+             */
+            room: string | string[] | null;
+            /**
+             * Teacher
+             * @description Teacher on lesson
+             */
+            teacher: string | null;
+            /**
+             * Course Name
+             * @description Name of the course
+             */
+            course_name: string | null;
+            /**
+             * Group Name
+             * @description Name of the group or list of groups
+             */
+            group_name: string | string[] | null;
+            /**
+             * Students Number
+             * @description Number of students in the group
+             */
+            students_number: number | null;
+            /**
+             * Date On
+             * @description Specific dates with lessons
+             */
+            date_on: string[] | null;
+            /**
+             * Date Except
+             * @description Specific dates when there is no lessons
+             */
+            date_except: string[] | null;
+            /**
+             * Date From
+             * @description Date from which the lesson starts
+             */
+            date_from: string | null;
+            /**
+             * Spreadsheet Id
+             * @description Spreadsheet ID
+             */
+            spreadsheet_id: string;
+            /**
+             * Google Sheet Gid
+             * @description Google Spreadsheet ID of the sheet
+             */
+            google_sheet_gid: string;
+            /**
+             * Google Sheet Name
+             * @description Sheet name to which the lesson belongs in Google Spreadsheet
+             */
+            google_sheet_name: string;
+            /**
+             * A1 Range
+             * @description Range of the lesson: may be multiple cells, for example 'A1:A10'
+             */
+            a1_range: string | null;
+        };
+        /** OptionsData */
+        OptionsData: {
+            semester: components["schemas"]["SemesterOptions-Output"] | null;
+            teachers: components["schemas"]["TeachersData"] | null;
+        };
+        /**
+         * OutlookIssue
+         * @description Issue when there is a Outlook booking in the room at the same time as the lesson. Grouped by Outlook event title.
+         */
+        OutlookIssue: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            collision_type: OutlookIssueCollision_type;
+            /**
+             * Outlook Event Title
+             * @description Title of the Outlook event
+             */
+            outlook_event_title: string;
+            /**
+             * Outlook Info
+             * @description Outlook info about the bookings in the same time
+             */
+            outlook_info: components["schemas"]["BookingDTO"][];
+            /**
+             * Lessons
+             * @description Lessons that are in conflict with the Outlook event
+             */
+            lessons: components["schemas"]["Lesson"][];
+        };
+        /** Override */
+        Override: {
+            /** Groups */
+            groups: string[];
+            /** Courses */
+            courses: string[];
+            /**
+             * Start Date
+             * Format: date-time
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+        };
+        /**
+         * RoomDTO
+         * @description Room description.
+         */
+        RoomDTO: {
+            /**
+             * Id
+             * @description Room slug
+             */
+            id: string;
+            /**
+             * Title
+             * @description Room title
+             */
+            title: string | null;
+            /**
+             * Short Name
+             * @description Shorter version of room title
+             */
+            short_name: string | null;
+            /**
+             * My Uni Id
+             * @description ID of room on My University portal
+             */
+            my_uni_id: number | null;
+            /**
+             * Capacity
+             * @description Room capacity, amount of people
+             */
+            capacity: number | null;
+            /**
+             * Access Level
+             * @description Access level to the room. Yellow = for students. Red = for employees. Special = special rules apply.
+             */
+            access_level: RoomDTOAccess_level | null;
+            /**
+             * Restrict Daytime
+             * @description Prohibit to book during working hours. True = this room is available only at night 19:00-8:00, or full day on weekends.
+             * @default false
+             */
+            restrict_daytime: boolean;
+        };
+        /**
+         * RoomIssue
+         * @description Issue when there are multiple lessons in the room at the same time.
+         */
+        RoomIssue: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            collision_type: RoomIssueCollision_type;
+            /**
+             * Room
+             * @description Room name
+             */
+            room: string | string[];
+            /**
+             * Lessons
+             * @description Lessons in the room at the same time
+             */
+            lessons: components["schemas"]["Lesson"][];
+        };
+        /** SemesterOptions */
+        "SemesterOptions-Input": {
+            /** Name */
+            name: string;
+            /** Core Courses Spreadsheet Id */
+            core_courses_spreadsheet_id?: string | null;
+            /**
+             * Core Courses Targets
+             * @default []
+             */
+            core_courses_targets: components["schemas"]["Target"][];
+            /** Electives Spreadsheet Id */
+            electives_spreadsheet_id?: string | null;
+        };
+        /** SemesterOptions */
+        "SemesterOptions-Output": {
+            /** Name */
+            name: string;
+            /** Core Courses Spreadsheet Id */
+            core_courses_spreadsheet_id: string | null;
+            /**
+             * Core Courses Targets
+             * @default []
+             */
+            core_courses_targets: components["schemas"]["Target"][];
+            /** Electives Spreadsheet Id */
+            electives_spreadsheet_id: string | null;
+        };
+        /** Target */
+        Target: {
+            /** Sheet Name */
+            sheet_name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Override */
+            override: components["schemas"]["Override"][];
+        };
+        /** Teacher */
+        Teacher: {
+            /** Name */
+            name: string;
+            /** Russian Name */
+            russian_name: string | null;
+            /** Email */
+            email: string | null;
+            /** Alias */
+            alias: string | null;
+            /** Student Group */
+            student_group: string | null;
+        };
+        /**
+         * TeacherIssue
+         * @description Issue when there is a teacher with multiple lessons at the same time, or when teacher study in the same time as the lesson.
+         */
+        TeacherIssue: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            collision_type: TeacherIssueCollision_type;
+            /**
+             * Teacher
+             * @description Teacher name
+             */
+            teacher: string;
+            /**
+             * Teaching Lessons
+             * @description Lessons of the teacher at the same time
+             */
+            teaching_lessons: components["schemas"]["Lesson"][];
+            /**
+             * Studying Lessons
+             * @description Lessons of the teacher as a student at the same time
+             */
+            studying_lessons: components["schemas"]["Lesson"][];
+        };
+        /** TeachersData */
+        TeachersData: {
+            /**
+             * Data
+             * @default []
+             */
+            data: components["schemas"]["Teacher"][];
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
+        };
     };
-    /**
-     * CapacityIssue
-     * @description Issue when there is not enough places in the room for the lesson.
-     */
-    CapacityIssue: {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      collision_type: CapacityIssueCollision_type;
-      /**
-       * Room
-       * @description Room name
-       */
-      room: string | string[];
-      /**
-       * Room Capacity
-       * @description Assumed capacity of the room
-       */
-      room_capacity: number | null;
-      /**
-       * Needed Capacity
-       * @description Needed capacity for the lesson (sum of all groups)
-       */
-      needed_capacity: number;
-      lesson: components['schemas']['Lesson'];
-    };
-    /** CheckParameters */
-    CheckParameters: {
-      /** Google Spreadsheet Id */
-      google_spreadsheet_id: string;
-      /** Target Sheet Names */
-      target_sheet_names: string[];
-      /**
-       * Check Room Collisions
-       * @default true
-       */
-      check_room_collisions: boolean;
-      /**
-       * Check Teacher Collisions
-       * @default true
-       */
-      check_teacher_collisions: boolean;
-      /**
-       * Check Space Collisions
-       * @default true
-       */
-      check_space_collisions: boolean;
-      /**
-       * Check Outlook Collisions
-       * @default true
-       */
-      check_outlook_collisions: boolean;
-    };
-    /** CheckResults */
-    CheckResults: {
-      /** Issues */
-      issues: components['schemas']['Issue'][];
-    };
-    /** HTTPValidationError */
-    HTTPValidationError: {
-      /** Detail */
-      detail?: components['schemas']['ValidationError'][];
-    };
-    Issue:
-      | components['schemas']['CapacityIssue']
-      | components['schemas']['RoomIssue']
-      | components['schemas']['OutlookIssue']
-      | components['schemas']['TeacherIssue'];
-    /** Lesson */
-    Lesson: {
-      /**
-       * Lesson Name
-       * @description Name of the lesson
-       */
-      lesson_name: string;
-      /**
-       * Weekday
-       * @description Weekday of a lesson
-       */
-      weekday: string | null;
-      /**
-       * Start Time
-       * Format: time
-       * @description Start time of lesson
-       */
-      start_time: string;
-      /**
-       * End Time
-       * Format: time
-       * @description End time of lesson
-       */
-      end_time: string;
-      /**
-       * Room
-       * @description Room for lesson, None - TBA, if list - multiple rooms simultaneously
-       */
-      room: string | string[] | null;
-      /**
-       * Teacher
-       * @description Teacher on lesson
-       */
-      teacher: string | null;
-      /**
-       * Course Name
-       * @description Name of the course
-       */
-      course_name: string | null;
-      /**
-       * Group Name
-       * @description Name of the group or list of groups
-       */
-      group_name: string | string[] | null;
-      /**
-       * Students Number
-       * @description Number of students in the group
-       */
-      students_number: number;
-      /**
-       * Date On
-       * @description Specific dates with lessons
-       */
-      date_on: string[] | null;
-      /**
-       * Date Except
-       * @description Specific dates when there is no lessons
-       */
-      date_except: string[] | null;
-      /**
-       * Date From
-       * @description Date from which the lesson starts
-       */
-      date_from: string | null;
-      /**
-       * Excel Sheet Name
-       * @description Sheet name to which the lesson belongs in Google Spreadsheet
-       */
-      excel_sheet_name: string | null;
-      /**
-       * Excel Range
-       * @description Range of the lesson: may be multiple cells, for example 'A1:A10'
-       */
-      excel_range: string | null;
-    };
-    /** OptionsData */
-    OptionsData: {
-      semester: components['schemas']['SemesterOptions-Output'] | null;
-      teachers: components['schemas']['TeachersData'] | null;
-    };
-    /**
-     * OutlookIssue
-     * @description Issue when there is a Outlook booking in the room at the same time as the lesson. Grouped by Outlook event title.
-     */
-    OutlookIssue: {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      collision_type: OutlookIssueCollision_type;
-      /**
-       * Outlook Event Title
-       * @description Title of the Outlook event
-       */
-      outlook_event_title: string;
-      /**
-       * Outlook Info
-       * @description Outlook info about the bookings in the same time
-       */
-      outlook_info: components['schemas']['BookingDTO'][];
-      /**
-       * Lessons
-       * @description Lessons that are in conflict with the Outlook event
-       */
-      lessons: components['schemas']['Lesson'][];
-    };
-    /** Override */
-    'Override-Input': {
-      /**
-       * Groups
-       * @default []
-       */
-      groups: string[];
-      /**
-       * Courses
-       * @default []
-       */
-      courses: string[];
-      /**
-       * Start Date
-       * Format: date
-       */
-      start_date: string;
-      /**
-       * End Date
-       * Format: date
-       */
-      end_date: string;
-    };
-    /** Override */
-    'Override-Output': {
-      /**
-       * Groups
-       * @default []
-       */
-      groups: string[];
-      /**
-       * Courses
-       * @default []
-       */
-      courses: string[];
-      /**
-       * Start Date
-       * Format: date
-       */
-      start_date: string;
-      /**
-       * End Date
-       * Format: date
-       */
-      end_date: string;
-    };
-    /**
-     * RoomDTO
-     * @description Room description.
-     */
-    RoomDTO: {
-      /**
-       * Id
-       * @description Room slug
-       */
-      id: string;
-      /**
-       * Title
-       * @description Room title
-       */
-      title: string | null;
-      /**
-       * Short Name
-       * @description Shorter version of room title
-       */
-      short_name: string | null;
-      /**
-       * My Uni Id
-       * @description ID of room on My University portal
-       */
-      my_uni_id: number | null;
-      /**
-       * Capacity
-       * @description Room capacity, amount of people
-       */
-      capacity: number | null;
-      /**
-       * Access Level
-       * @description Access level to the room. Yellow = for students. Red = for employees. Special = special rules apply.
-       */
-      access_level: RoomDTOAccess_level | null;
-      /**
-       * Restrict Daytime
-       * @description Prohibit to book during working hours. True = this room is available only at night 19:00-8:00, or full day on weekends.
-       * @default false
-       */
-      restrict_daytime: boolean;
-    };
-    /**
-     * RoomIssue
-     * @description Issue when there are multiple lessons in the room at the same time.
-     */
-    RoomIssue: {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      collision_type: RoomIssueCollision_type;
-      /**
-       * Room
-       * @description Room name
-       */
-      room: string | string[];
-      /**
-       * Lessons
-       * @description Lessons in the room at the same time
-       */
-      lessons: components['schemas']['Lesson'][];
-    };
-    /** SemesterOptions */
-    'SemesterOptions-Input': {
-      /** Name */
-      name: string;
-      /**
-       * Start Date
-       * Format: date
-       */
-      start_date: string;
-      /**
-       * End Date
-       * Format: date
-       */
-      end_date: string;
-      /**
-       * Override
-       * @default []
-       */
-      override: components['schemas']['Override-Input'][];
-    };
-    /** SemesterOptions */
-    'SemesterOptions-Output': {
-      /** Name */
-      name: string;
-      /**
-       * Start Date
-       * Format: date
-       */
-      start_date: string;
-      /**
-       * End Date
-       * Format: date
-       */
-      end_date: string;
-      /**
-       * Override
-       * @default []
-       */
-      override: components['schemas']['Override-Output'][];
-    };
-    /** Teacher */
-    Teacher: {
-      /** Name */
-      name: string;
-      /** Email */
-      email: string | null;
-      /** Alias */
-      alias: string | null;
-      /** Student */
-      student: string | null;
-    };
-    /**
-     * TeacherIssue
-     * @description Issue when there is a teacher with multiple lessons at the same time, or when teacher study in the same time as the lesson.
-     */
-    TeacherIssue: {
-      /**
-       * @description discriminator enum property added by openapi-typescript
-       * @enum {string}
-       */
-      collision_type: TeacherIssueCollision_type;
-      /**
-       * Teacher
-       * @description Teacher name
-       */
-      teacher: string;
-      /**
-       * Teaching Lessons
-       * @description Lessons of the teacher at the same time
-       */
-      teaching_lessons: components['schemas']['Lesson'][];
-      /**
-       * Studying Lessons
-       * @description Lessons of the teacher as a student at the same time
-       */
-      studying_lessons: components['schemas']['Lesson'][];
-    };
-    /** TeachersData */
-    TeachersData: {
-      /**
-       * Data
-       * @default []
-       */
-      data: components['schemas']['Teacher'][];
-    };
-    /** ValidationError */
-    ValidationError: {
-      /** Location */
-      loc: (string | number)[];
-      /** Message */
-      msg: string;
-      /** Error Type */
-      type: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type SchemaBookingDto = components['schemas']['BookingDTO'];
 export type SchemaCapacityIssue = components['schemas']['CapacityIssue'];
 export type SchemaCheckParameters = components['schemas']['CheckParameters'];
 export type SchemaCheckResults = components['schemas']['CheckResults'];
-export type SchemaHttpValidationError =
-  components['schemas']['HTTPValidationError'];
+export type SchemaHttpValidationError = components['schemas']['HTTPValidationError'];
 export type SchemaIssue = components['schemas']['Issue'];
 export type SchemaLesson = components['schemas']['Lesson'];
 export type SchemaOptionsData = components['schemas']['OptionsData'];
 export type SchemaOutlookIssue = components['schemas']['OutlookIssue'];
-export type SchemaOverrideInput = components['schemas']['Override-Input'];
-export type SchemaOverrideOutput = components['schemas']['Override-Output'];
+export type SchemaOverride = components['schemas']['Override'];
 export type SchemaRoomDto = components['schemas']['RoomDTO'];
 export type SchemaRoomIssue = components['schemas']['RoomIssue'];
-export type SchemaSemesterOptionsInput =
-  components['schemas']['SemesterOptions-Input'];
-export type SchemaSemesterOptionsOutput =
-  components['schemas']['SemesterOptions-Output'];
+export type SchemaSemesterOptionsInput = components['schemas']['SemesterOptions-Input'];
+export type SchemaSemesterOptionsOutput = components['schemas']['SemesterOptions-Output'];
+export type SchemaTarget = components['schemas']['Target'];
 export type SchemaTeacher = components['schemas']['Teacher'];
 export type SchemaTeacherIssue = components['schemas']['TeacherIssue'];
 export type SchemaTeachersData = components['schemas']['TeachersData'];
 export type SchemaValidationError = components['schemas']['ValidationError'];
 export type $defs = Record<string, never>;
 export interface operations {
-  check_timetable_collisions_collisions_check_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    check_timetable_collisions_collisions_check_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckParameters"];
+            };
+        };
+        responses: {
+            /** @description Timetable collisions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckResults"];
+                };
+            };
+            /** @description Invalid token OR no credentials provided */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CheckParameters'];
-      };
+    set_semester_options_set_semester_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SemesterOptions-Input"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SemesterOptions-Output"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Timetable collisions */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    get_semester_options_semester_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['CheckResults'];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SemesterOptions-Output"] | null;
+                };
+            };
         };
-      };
-      /** @description Invalid token OR no credentials provided */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
     };
-  };
-  get_all_bookings_dev_bookings_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    get_all_options_options__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OptionsData"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    set_teachers_options_set_teachers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['BookingDTO'][];
+        requestBody: {
+            content: {
+                "text/tab-separated-values": string;
+            };
         };
-      };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeachersData"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-  };
-  get_bookings_dev_bookings__room_id__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        room_id: string;
-      };
-      cookie?: never;
+    get_teachers_options_teachers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeachersData"] | null;
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    get_all_bookings_dev_bookings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['BookingDTO'][];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingDTO"][];
+                };
+            };
         };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
     };
-  };
-  get_rooms_dev_rooms_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    get_bookings_dev_bookings__room_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                room_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BookingDTO"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    get_rooms_dev_rooms_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          'application/json': components['schemas']['RoomDTO'][];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomDTO"][];
+                };
+            };
         };
-      };
     };
-  };
-  set_semester_options_set_semester_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['SemesterOptions-Input'];
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SemesterOptions-Output'];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  get_semester_options_semester_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json':
-            | components['schemas']['SemesterOptions-Output']
-            | null;
-        };
-      };
-    };
-  };
-  get_all_options_options__get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['OptionsData'];
-        };
-      };
-    };
-  };
-  set_teachers_options_set_teachers_post: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'text/tab-separated-values': string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': number;
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['HTTPValidationError'];
-        };
-      };
-    };
-  };
-  get_teachers_options_teachers_get: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Successful Response */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['TeachersData'] | null;
-        };
-      };
-    };
-  };
 }
 export enum CapacityIssueCollision_type {
-  capacity = 'capacity',
+    capacity = "capacity"
 }
 export enum OutlookIssueCollision_type {
-  outlook = 'outlook',
+    outlook = "outlook"
 }
 export enum RoomDTOAccess_level {
-  yellow = 'yellow',
-  red = 'red',
-  special = 'special',
+    yellow = "yellow",
+    red = "red",
+    special = "special"
 }
 export enum RoomIssueCollision_type {
-  room = 'room',
+    room = "room"
 }
 export enum TeacherIssueCollision_type {
-  teacher = 'teacher',
+    teacher = "teacher"
 }

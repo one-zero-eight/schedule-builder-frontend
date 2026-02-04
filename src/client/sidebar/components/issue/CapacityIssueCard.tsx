@@ -1,9 +1,9 @@
 import { clsx } from 'clsx';
 import { SchemaCapacityIssue } from '../../../api/types';
 import {
-  addIgnoredConflict,
-  formatStringOrList,
-  removeIgnoredConflict,
+    addIgnoredConflict,
+    formatStringOrList,
+    removeIgnoredConflict,
 } from '../../../lib/utils';
 import deleteBtn from '../../Delete Icon.svg';
 import { LessonBlock } from './LessonBlock';
@@ -42,7 +42,7 @@ export function CapacityIssueCard({
 
         <button
           type="button"
-          className="rounded-lg p-0.5 size-8 hover:bg-accent shrink-0 h-fit cursor-pointer"
+          className="rounded-lg p-0.5 size-8 hover:bg-accent shrink-0 h-fit"
           onClick={handleAction}
           title={
             mode === 'ignore' ? 'Ignore this conflict' : 'Restore this conflict'

@@ -1,25 +1,18 @@
 import { scheduleBuilderFetch } from '../api';
 import * as scheduleBuilderTypes from '../api/types';
 import { SchemaIssue } from '../api/types';
-import { serverFunctions } from './serverFunctions';
 import { APIResponse } from './types';
 
 export default async function getAllCollisions(
   onStatusChange: (arg0: string) => void,
   token: string
 ): Promise<APIResponse<SchemaIssue[]>> {
-  onStatusChange('Requesting spreadsheet ID...');
-  const spreadsheetID = await serverFunctions.getSpreadsheetID();
-
   try {
     onStatusChange('Fetching collisions...');
     const { response, data } = await scheduleBuilderFetch.POST(
       '/collisions/check',
       {
         body: {
-          google_spreadsheet_id: spreadsheetID,
-          // TODO: Make this configurable in settings
-          target_sheet_names: ['2nd block common (since 27/10)', 'Ru Programs'],
           check_room_collisions: true,
           check_teacher_collisions: true,
           check_space_collisions: true,
@@ -44,6 +37,33 @@ export default async function getAllCollisions(
     }
 
     return { success: true, payload: data.issues };
+  } catch (error) {
+    return { success: false, error: 'Something went wrong with the request' };
+  }
+}
+
+export async function getAllOptions(
+  token: string
+): Promise<APIResponse<scheduleBuilderTypes.SchemaOptionsData>> {
+  try {
+    const { response, data } = await scheduleBuilderFetch.GET('/options/', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok || data === undefined) {
+      if (response.status === 401) {
+        return {
+          success: false,
+          error: 'The API token you provided is wrong',
+        };
+      }
+      return {
+        success: false,
+        error: `Backend sent ${response.status} status code =(`,
+      };
+    }
+
+    return { success: true, payload: data };
   } catch (error) {
     return { success: false, error: 'Something went wrong with the request' };
   }
@@ -146,7 +166,7 @@ export async function getTeachersOptions(
 export async function setTeachersOptions(
   teachersData: string,
   token: string
-): Promise<APIResponse<number>> {
+): Promise<APIResponse<scheduleBuilderTypes.SchemaTeachersData>> {
   try {
     const { response, data } = await scheduleBuilderFetch.POST(
       '/options/set-teachers',
@@ -156,6 +176,7 @@ export async function setTeachersOptions(
           Authorization: `Bearer ${token}`,
           'Content-Type': 'text/tab-separated-values',
         },
+        bodySerializer: (body) => body as string,
       }
     );
 

@@ -30,3 +30,9 @@ export function selectTheRangeForUser(sheetName: string | null, range: string) {
 export function getCurrentSheetName(): string {
   return SpreadsheetApp.getActiveSpreadsheet().getActiveSheet().getName();
 }
+
+export function getSheetNames(): string[] {
+  const sheets = SpreadsheetApp.getActiveSpreadsheet().getSheets();
+  console.log(sheets);
+  return sheets.map(sheet => sheet.getName());
+}
