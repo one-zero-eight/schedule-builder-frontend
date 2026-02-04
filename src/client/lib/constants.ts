@@ -9,3 +9,4 @@ export const INNOHASSLE_URL = 'https://innohassle.ru';
 // Local storage keys
 export const IGNORED_ISSUES_KEY = 'ignored_conflicts';
 export const CACHED_AUTH_TOKEN = 'saved-api-token';
+export const CHECK_PARAMETERS_KEY = 'check_parameters';

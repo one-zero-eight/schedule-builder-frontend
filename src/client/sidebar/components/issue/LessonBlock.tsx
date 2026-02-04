@@ -16,14 +16,14 @@ export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
 
   return (
     <div className="flex text-blue-400 text-sm">
-      {lesson.excel_range && (
+      {lesson.a1_range && (
         <button
           type="button"
           className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent"
           onClick={() =>
-            selectCell(lesson.excel_sheet_name, lesson.excel_range || '')
+            selectCell(lesson.google_sheet_name, lesson.a1_range || '')
           }
-          title={`Select cell in spreadsheet (${lesson.excel_range} on '${lesson.excel_sheet_name}')`}
+          title={`Select cell in spreadsheet (${lesson.a1_range} on '${lesson.google_sheet_name}')`}
         >
           {isGoogleBusy ? (
             <Spinner className="text-primary" />

@@ -1,23 +1,26 @@
 import { scheduleBuilderFetch } from '../api';
 import * as scheduleBuilderTypes from '../api/types';
-import { SchemaIssue } from '../api/types';
+import { SchemaCheckParameters, SchemaIssue } from '../api/types';
 import { APIResponse } from './types';
+
+export const DEFAULT_CHECK_PARAMETERS: SchemaCheckParameters = {
+  check_room_collisions: true,
+  check_teacher_collisions: true,
+  check_space_collisions: true,
+  check_outlook_collisions: true,
+};
 
 export default async function getAllCollisions(
   onStatusChange: (arg0: string) => void,
-  token: string
+  token: string,
+  checkParameters: SchemaCheckParameters = DEFAULT_CHECK_PARAMETERS
 ): Promise<APIResponse<SchemaIssue[]>> {
   try {
     onStatusChange('Fetching collisions...');
     const { response, data } = await scheduleBuilderFetch.POST(
       '/collisions/check',
       {
-        body: {
-          check_room_collisions: true,
-          check_teacher_collisions: true,
-          check_space_collisions: true,
-          check_outlook_collisions: true,
-        },
+        body: checkParameters,
         headers: { Authorization: `Bearer ${token}` },
       }
     );

@@ -77,8 +77,8 @@ export function getIssueId(issue: SchemaIssue): string {
   const base = `${lesson.lesson_name}_${lesson.weekday}_${lesson.start_time}_${lesson.end_time}_${room}_${teacher}_${issue.collision_type}`;
 
   // Добавляем дополнительные свойства в зависимости от типа конфликта
-  if (lesson.excel_range) {
-    return `${base}_${lesson.excel_range}`;
+  if (lesson.a1_range) {
+    return `${base}_${lesson.a1_range}`;
   }
 
   return base;

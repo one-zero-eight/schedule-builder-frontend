@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import Fuse from 'fuse.js';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { SchemaIssue, SchemaTeacher } from '../../../api/types';
+import { SchemaCheckParameters, SchemaIssue, SchemaTeacher } from '../../../api/types';
 import { getTeachersOptions } from '../../../lib/endpoints';
 import { CollisionType } from '../../../lib/types';
 
@@ -21,8 +21,15 @@ import useToken from '../../hooks/useToken';
 import { SvgIconSmile } from '../../Smile';
 import { Header } from './Header';
 
+const CHECK_OPTIONS: { key: keyof SchemaCheckParameters; label: string }[] = [
+  { key: 'check_room_collisions', label: 'Room' },
+  { key: 'check_teacher_collisions', label: 'Teacher' },
+  { key: 'check_space_collisions', label: 'Space' },
+  { key: 'check_outlook_collisions', label: 'Outlook' },
+];
+
 export function MainPage() {
-  const { issues: payload, updateIssues } = useConflicts();
+  const { issues: payload, updateIssues, checkParameters, setCheckParameters } = useConflicts();
   const { payload: issues, error, isLoading, step } = payload;
   const { token } = useToken();
 
@@ -132,10 +139,28 @@ export function MainPage() {
           <label className="text-sm font-bold text-text">
             Check for collisions
           </label>
+          <div className="flex flex-wrap gap-3">
+            {CHECK_OPTIONS.map(({ key, label }) => (
+              <label key={key} className="flex items-center gap-1.5 cursor-pointer text-sm text-text">
+                <input
+                  type="checkbox"
+                  checked={checkParameters[key]}
+                  onChange={(e) =>
+                    setCheckParameters({
+                      ...checkParameters,
+                      [key]: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 accent-primary cursor-pointer"
+                />
+                {label}
+              </label>
+            ))}
+          </div>
           <LoadingButton
             type="button"
             className="bg-primary text-white border px-2 py-1 rounded-lg border-primary hover:brightness-90 disabled:opacity-50 disabled:hover:brightness-100 flex items-center justify-center gap-2 disabled:cursor-not-allowed"
-            disabled={isLoading}
+            disabled={isLoading || !Object.values(checkParameters).some(Boolean)}
             onClick={() => updateIssues()}
             loadingText={step}
             isLoading={isLoading}
