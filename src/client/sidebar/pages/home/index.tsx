@@ -7,9 +7,9 @@ import { CollisionType } from '../../../lib/types';
 
 import { filterIgnoredIssues, getIgnoredIssuesIds } from '../../../lib/utils';
 import {
-    filterIssues,
-    getActiveFilterLabel,
-    getFilterOptions,
+  filterIssues,
+  getActiveFilterLabel,
+  getFilterOptions,
 } from '../../../utils/filterUtils';
 import APIForm from '../../components/apiToken/Form';
 import { IssueCard } from '../../components/issue/IssueCard';
@@ -60,7 +60,7 @@ export function MainPage() {
   // Fuse.js instance for searching
   const fuse = useMemo(() => {
     return new Fuse(teachers, {
-      keys: ['name', 'email', 'alias', 'student_group'],
+      keys: ['name', 'russian_name', 'email', 'alias', 'student_group'],
       threshold: 0.3,
       includeScore: true,
     });
