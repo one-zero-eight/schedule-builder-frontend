@@ -9,7 +9,7 @@ import useToken from '../hooks/useToken';
 function loadCheckParameters(): SchemaCheckParameters {
   const stored = localStorage.getItem(CHECK_PARAMETERS_KEY);
   if (stored) {
-    return JSON.parse(stored);
+    return { ...DEFAULT_CHECK_PARAMETERS, ...JSON.parse(stored) };
   }
   return DEFAULT_CHECK_PARAMETERS;
 }

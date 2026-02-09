@@ -174,6 +174,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/parser/parse-location-string": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Parse Location String Route */
+        post: operations["parse_location_string_route_parser_parse_location_string_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -241,6 +258,16 @@ export interface components {
         /** CheckParameters */
         CheckParameters: {
             /**
+             * Care About Core Courses
+             * @default true
+             */
+            care_about_core_courses: boolean;
+            /**
+             * Care About Electives
+             * @default true
+             */
+            care_about_electives: boolean;
+            /**
              * Check Room Collisions
              * @default true
              */
@@ -266,12 +293,177 @@ export interface components {
             /** Issues */
             issues: components["schemas"]["Issue"][];
         };
+        /**
+         * Elective
+         * @description How it will be in innohassle event group name: spring26-bs2-ru-ввтус
+         *     - semester alias: spring26
+         *     - sheet name: bs2-ru
+         *     - elective alias: ввтус
+         */
+        Elective: {
+            /** Alias */
+            alias: string;
+            /** Short Name */
+            short_name: string;
+            /** Name */
+            name?: string | null;
+            /** Instructor */
+            instructor?: string | null;
+            /** Elective Type */
+            elective_type?: string | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
         Issue: components["schemas"]["CapacityIssue"] | components["schemas"]["RoomIssue"] | components["schemas"]["OutlookIssue"] | components["schemas"]["TeacherIssue"];
+        /**
+         * Item
+         * @description Represents a parsed location string with optional modifiers and nested locations.
+         *
+         *     This class is the result of parsing location strings from spreadsheet cells (third row
+         *     in CoreCourseCell). The location string can contain room numbers, online indicators,
+         *     and various temporal modifiers that affect when and where events occur.
+         *
+         *     ## Flow Overview
+         *
+         *     ### 1. Input: Spreadsheet Location String
+         *     Location strings come from the third cell value in CoreCourseCell (value[2]).
+         *     Examples:
+         *     - "313" → simple room number
+         *     - "ONLINE" → online event
+         *     - "313 (WEEK 1-3) / ONLINE" → room 313 for weeks 1-3, then online
+         *     - "ONLINE ON 13/09, 108 ON 01/11 (STARTS AT 9:00)" → online on 13/09, room 108 on 01/11, both starting at 9:00
+         *     - "460 EXCEPT 28/11" → room 460, excluding 28/11
+         *
+         *     ### 2. Parsing: parse_location_string()
+         *     The location string is normalized (uppercased, "AND" replaced with commas) and parsed
+         *     into an Item object. The parser recognizes:
+         *
+         *     **Locations:**
+         *     - Room numbers: "313", "room 107", "ROOM #107" → location="313" or "107"
+         *     - Online: "ONLINE", "ОНЛАЙН", "ONLINE (TBA)" → location="ONLINE" or "ОНЛАЙН"
+         *     - Unknown: "?" → location="?"
+         *     - Multiple: "106/313/314" → location="106/313/314"
+         *
+         *     **Modifiers:**
+         *     - `starts_from`: "STARTS FROM 21/09" → starts_from=date(2024, 9, 21)
+         *     - `starts_at`: "STARTS AT 18:00" → starts_at=time(18, 0)
+         *     - `till`: "TILL 21:00" → till=time(21, 0)
+         *     - `on_weeks`: "WEEK 1-3" → on_weeks=[1, 2, 3]
+         *     - `on`: "ON 13/09, 20/09" → on=[date(2024, 9, 13), date(2024, 9, 20)]
+         *     - `except_`: "EXCEPT 30/01, 06/02" → except_=[date(2024, 1, 30), date(2024, 2, 6)]
+         *
+         *     **Nested Structures (NEST):**
+         *     Complex patterns create nested Items:
+         *     - "313 (WEEK 1-3) / ONLINE" → Item(location="313", on_weeks=[1,2,3], NEST=[Item(location="ONLINE")])
+         *     - "105 ON 15/10, 106 ON 29/10" → Item(location="105", on=[...], NEST=[Item(location="106", on=[...])])
+         *     - "ONLINE ON 13/09, 108 ON 01/11 (STARTS AT 9:00)" → Item with nested items sharing starts_at
+         *
+         *     ### 3. Output: ICS Calendar Events (generate_vevents())
+         *     The Item is converted to one or more ICS calendar events:
+         *
+         *     **Simple Case (no location_item):**
+         *     - Creates one recurring event with RRULE (weekly recurrence)
+         *     - Uses event.location, event.start_time, event.end_time
+         *
+         *     **With location_item:**
+         *
+         *     **Base Event Properties:**
+         *     - `location`: Uses location_item.location or falls back to event.location
+         *     - `starts`: Uses location_item.starts_from or falls back to event.starts
+         *     - `start_time`: Adjusted if location_item.starts_at exists (keeps duration)
+         *     - `end_time`: Set to location_item.till if exists, otherwise calculated from start_time + duration
+         *
+         *     **Recurrence Handling:**
+         *     - `on_weeks` → Converted to specific dates using nearest_weekday() + weeks offset, merged into `on`
+         *     - If `on` exists: Creates events with RDATE (specific dates) instead of RRULE
+         *       - Each date in `on` becomes a recurrence date
+         *       - dtstart/dtend adapted to first date in `on`
+         *     - If `on` is None: Creates weekly recurring event with RRULE
+         *     - If `except_` exists: Adds EXDATE to exclude specific dates from recurrence
+         *
+         *     **Nested Items (NEST):**
+         *     Nested items create additional calendar events:
+         *
+         *     - If parent has RRULE (weekly recurrence):
+         *       - For each nested item with `on` dates:
+         *         - Creates RECURRENCE-ID events overriding specific recurrence instances
+         *         - Uses nested item's location, starts_at, till if specified
+         *         - Removes RRULE from override event
+         *         - Parent event still yields with RRULE
+         *
+         *     - If parent has RDATE (specific dates):
+         *       - Creates separate events for nested items
+         *       - Each nested item gets its own RDATE with its `on` dates
+         *       - Uses nested item's location, starts_at, till if specified
+         *       - Parent event yields first, then nested events
+         *
+         *     **Examples of ICS Output:**
+         *
+         *     Input: "313"
+         *     → One event: location="313", RRULE=FREQ=WEEKLY
+         *
+         *     Input: "ONLINE ON 13/09, 20/09"
+         *     → One event: location="ONLINE", RDATE=[2024-09-13, 2024-09-20]
+         *
+         *     Input: "313 (WEEK 1-3) / ONLINE"
+         *     → Two events:
+         *       1. location="313", RRULE=FREQ=WEEKLY (with EXDATE for weeks after 3)
+         *       2. location="ONLINE", RDATE=[dates for weeks 4+]
+         *
+         *     Input: "ONLINE ON 13/09, 108 ON 01/11 (STARTS AT 9:00)"
+         *     → Three events:
+         *       1. location="ONLINE", RDATE=[2024-09-13], dtstart=09:00
+         *       2. location="108", RDATE=[2024-11-01], dtstart=09:00
+         *       3. Parent recurring event (if applicable)
+         *
+         *     Input: "460 EXCEPT 28/11"
+         *     → One event: location="460", RRULE=FREQ=WEEKLY, EXDATE=[2024-11-28]
+         */
+        Item: {
+            /**
+             * Location
+             * @description Room number, "ONLINE", "ОНЛАЙН", "?", or slash-separated combinations like "106/313"
+             */
+            location?: string | null;
+            /**
+             * Starts From
+             * @description Date when the event starts (overrides event.starts)
+             */
+            starts_from?: string | null;
+            /**
+             * Starts At
+             * @description Time when the event starts (overrides event.start_time, preserves duration)
+             */
+            starts_at?: string | null;
+            /**
+             * Till
+             * @description Time when the event ends (overrides event.end_time)
+             */
+            till?: string | null;
+            /**
+             * On Weeks
+             * @description List of week numbers (1-based, converted to dates during ICS generation)
+             */
+            on_weeks?: number[] | null;
+            /**
+             * On
+             * @description List of specific dates when event occurs (creates RDATE instead of RRULE)
+             */
+            on?: string[] | null;
+            /**
+             * Except
+             * @description List of dates to exclude from recurrence (creates EXDATE)
+             */
+            except_?: string[] | null;
+            /**
+             * Nest
+             * @description List of nested Item objects for complex location patterns
+             */
+            NEST?: components["schemas"]["Item"][] | null;
+        };
         /** Lesson */
         Lesson: {
             /**
@@ -405,6 +597,12 @@ export interface components {
              */
             end_date: string;
         };
+        /** ParseLocationStringResponse */
+        ParseLocationStringResponse: {
+            location_item: components["schemas"]["Item"];
+            /** Description */
+            description: string;
+        };
         /**
          * RoomDTO
          * @description Room description.
@@ -478,9 +676,19 @@ export interface components {
              * Core Courses Targets
              * @default []
              */
-            core_courses_targets: components["schemas"]["Target"][];
+            core_courses_targets: components["schemas"]["src__core_courses__config__Target"][];
             /** Electives Spreadsheet Id */
             electives_spreadsheet_id?: string | null;
+            /**
+             * Electives Targets
+             * @default []
+             */
+            electives_targets: components["schemas"]["Target"][];
+            /**
+             * Electives
+             * @default []
+             */
+            electives: components["schemas"]["Elective"][];
         };
         /** SemesterOptions */
         "SemesterOptions-Output": {
@@ -492,26 +700,24 @@ export interface components {
              * Core Courses Targets
              * @default []
              */
-            core_courses_targets: components["schemas"]["Target"][];
+            core_courses_targets: components["schemas"]["src__core_courses__config__Target"][];
             /** Electives Spreadsheet Id */
             electives_spreadsheet_id: string | null;
+            /**
+             * Electives Targets
+             * @default []
+             */
+            electives_targets: components["schemas"]["Target"][];
+            /**
+             * Electives
+             * @default []
+             */
+            electives: components["schemas"]["Elective"][];
         };
         /** Target */
         Target: {
             /** Sheet Name */
             sheet_name: string;
-            /**
-             * Start Date
-             * Format: date
-             */
-            start_date: string;
-            /**
-             * End Date
-             * Format: date
-             */
-            end_date: string;
-            /** Override */
-            override: components["schemas"]["Override"][];
         };
         /** Teacher */
         Teacher: {
@@ -573,6 +779,23 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /** Target */
+        src__core_courses__config__Target: {
+            /** Sheet Name */
+            sheet_name: string;
+            /**
+             * Start Date
+             * Format: date
+             */
+            start_date: string;
+            /**
+             * End Date
+             * Format: date
+             */
+            end_date: string;
+            /** Override */
+            override: components["schemas"]["Override"][];
+        };
     };
     responses: never;
     parameters: never;
@@ -584,12 +807,15 @@ export type SchemaBookingDto = components['schemas']['BookingDTO'];
 export type SchemaCapacityIssue = components['schemas']['CapacityIssue'];
 export type SchemaCheckParameters = components['schemas']['CheckParameters'];
 export type SchemaCheckResults = components['schemas']['CheckResults'];
+export type SchemaElective = components['schemas']['Elective'];
 export type SchemaHttpValidationError = components['schemas']['HTTPValidationError'];
 export type SchemaIssue = components['schemas']['Issue'];
+export type SchemaItem = components['schemas']['Item'];
 export type SchemaLesson = components['schemas']['Lesson'];
 export type SchemaOptionsData = components['schemas']['OptionsData'];
 export type SchemaOutlookIssue = components['schemas']['OutlookIssue'];
 export type SchemaOverride = components['schemas']['Override'];
+export type SchemaParseLocationStringResponse = components['schemas']['ParseLocationStringResponse'];
 export type SchemaRoomDto = components['schemas']['RoomDTO'];
 export type SchemaRoomIssue = components['schemas']['RoomIssue'];
 export type SchemaSemesterOptionsInput = components['schemas']['SemesterOptions-Input'];
@@ -599,6 +825,7 @@ export type SchemaTeacher = components['schemas']['Teacher'];
 export type SchemaTeacherIssue = components['schemas']['TeacherIssue'];
 export type SchemaTeachersData = components['schemas']['TeachersData'];
 export type SchemaValidationError = components['schemas']['ValidationError'];
+export type SchemaSrcCoreCoursesConfigTarget = components['schemas']['src__core_courses__config__Target'];
 export type $defs = Record<string, never>;
 export interface operations {
     check_timetable_collisions_collisions_check_post: {
@@ -834,6 +1061,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RoomDTO"][];
+                };
+            };
+        };
+    };
+    parse_location_string_route_parser_parse_location_string_post: {
+        parameters: {
+            query: {
+                location_string: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ParseLocationStringResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

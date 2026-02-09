@@ -3,6 +3,7 @@ import {
   SchemaOverride,
   SchemaSemesterOptionsInput,
   SchemaSemesterOptionsOutput,
+  SchemaSrcCoreCoursesConfigTarget,
   SchemaTarget,
   SchemaTeachersData,
 } from '../../../api/types';
@@ -40,20 +41,28 @@ export function SettingsPage() {
     core_courses_spreadsheet_id: null,
     core_courses_targets: [],
     electives_spreadsheet_id: null,
+    electives_targets: [],
+    electives: [],
   });
 
   // Teachers form state
   const [teachersText, setTeachersText] = useState('');
 
-  // Target editing state
+  // Core courses target editing state
   const [editingTargetIndex, setEditingTargetIndex] = useState<number | null>(
     null
   );
-  const [targetForm, setTargetForm] = useState<SchemaTarget>({
+  const [targetForm, setTargetForm] = useState<SchemaSrcCoreCoursesConfigTarget>({
     sheet_name: '',
     start_date: '',
     end_date: '',
     override: [],
+  });
+
+  // Electives target editing state
+  const [editingElectiveTargetIndex, setEditingElectiveTargetIndex] = useState<number | null>(null);
+  const [electiveTargetForm, setElectiveTargetForm] = useState<SchemaTarget>({
+    sheet_name: '',
   });
 
   // Override editing state (within a target)
@@ -65,9 +74,11 @@ export function SettingsPage() {
     end_date: '',
   });
 
-  // Sheet names for autocomplete
-  const [sheetNames, setSheetNames] = useState<string[]>([]);
-  const [loadingSheetNames, setLoadingSheetNames] = useState(false);
+  // Sheet names for autocomplete (per spreadsheet)
+  const [coreCoursesSheetNames, setCoreCoursesSheetNames] = useState<string[]>([]);
+  const [electivesSheetNames, setElectivesSheetNames] = useState<string[]>([]);
+  const [loadingCoreCoursesSheetNames, setLoadingCoreCoursesSheetNames] = useState(false);
+  const [loadingElectivesSheetNames, setLoadingElectivesSheetNames] = useState(false);
 
   // Which spreadsheet ID is being set (shows loader)
   const [settingSpreadsheetId, setSettingSpreadsheetId] = useState<'core_courses' | 'electives' | null>(null);
@@ -89,6 +100,8 @@ export function SettingsPage() {
           core_courses_spreadsheet_id: semesterResult.payload.core_courses_spreadsheet_id,
           core_courses_targets: semesterResult.payload.core_courses_targets || [],
           electives_spreadsheet_id: semesterResult.payload.electives_spreadsheet_id,
+          electives_targets: semesterResult.payload.electives_targets || [],
+          electives: [],
         });
       }
 
@@ -110,14 +123,37 @@ export function SettingsPage() {
   };
 
   useEffect(() => {
-    loadSheetNames();
-  }, []);
-
-  useEffect(() => {
     if (token) {
       loadData();
     }
   }, [token]);
+
+  // Load sheet names when spreadsheet IDs change
+  useEffect(() => {
+    if (!semesterForm.core_courses_spreadsheet_id) {
+      setCoreCoursesSheetNames([]);
+      return;
+    }
+    setLoadingCoreCoursesSheetNames(true);
+    serverFunctions
+      .getSheetNamesBySpreadsheetId(semesterForm.core_courses_spreadsheet_id)
+      .then(setCoreCoursesSheetNames)
+      .catch(() => setCoreCoursesSheetNames([]))
+      .finally(() => setLoadingCoreCoursesSheetNames(false));
+  }, [semesterForm.core_courses_spreadsheet_id]);
+
+  useEffect(() => {
+    if (!semesterForm.electives_spreadsheet_id) {
+      setElectivesSheetNames([]);
+      return;
+    }
+    setLoadingElectivesSheetNames(true);
+    serverFunctions
+      .getSheetNamesBySpreadsheetId(semesterForm.electives_spreadsheet_id)
+      .then(setElectivesSheetNames)
+      .catch(() => setElectivesSheetNames([]))
+      .finally(() => setLoadingElectivesSheetNames(false));
+  }, [semesterForm.electives_spreadsheet_id]);
 
 
   const handleSemesterSubmit = async (e: React.FormEvent) => {
@@ -167,18 +203,6 @@ export function SettingsPage() {
 
   const clearMessage = () => setMessage(null);
 
-  const loadSheetNames = async () => {
-    console.log('loadSheetNames');
-    setLoadingSheetNames(true);
-    try {
-      const names = await serverFunctions.getSheetNames();
-      setSheetNames(names);
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to load sheet names' });
-    } finally {
-      setLoadingSheetNames(false);
-    }
-  };
 
   const setCurrentSpreadsheetId = async (field: 'core_courses' | 'electives') => {
     setSettingSpreadsheetId(field);
@@ -202,6 +226,8 @@ export function SettingsPage() {
         core_courses_spreadsheet_id: semester.core_courses_spreadsheet_id,
         core_courses_targets: semester.core_courses_targets || [],
         electives_spreadsheet_id: semester.electives_spreadsheet_id,
+        electives_targets: semester.electives_targets || [],
+          electives: [],
       });
     }
     setEditingSemester(true);
@@ -228,10 +254,13 @@ export function SettingsPage() {
         core_courses_spreadsheet_id: semester.core_courses_spreadsheet_id,
         core_courses_targets: semester.core_courses_targets || [],
         electives_spreadsheet_id: semester.electives_spreadsheet_id,
+        electives_targets: semester.electives_targets || [],
+          electives: [],
       });
     }
     setEditingTargetIndex(null);
     setEditingOverrideIndex(null);
+    setEditingElectiveTargetIndex(null);
   };
 
   const cancelEditingTeachers = () => {
@@ -312,6 +341,48 @@ export function SettingsPage() {
     setSemesterForm((prev) => ({
       ...prev,
       core_courses_targets: prev.core_courses_targets.filter((_, i) => i !== index),
+    }));
+  };
+
+  // Elective target management functions
+  const addElectiveTarget = () => {
+    setElectiveTargetForm({ sheet_name: '' });
+    setEditingElectiveTargetIndex(semesterForm.electives_targets.length);
+    setSemesterForm((prev) => ({
+      ...prev,
+      electives_targets: [...prev.electives_targets, { sheet_name: '' }],
+    }));
+  };
+
+  const editElectiveTarget = (index: number) => {
+    setElectiveTargetForm({ ...semesterForm.electives_targets[index] });
+    setEditingElectiveTargetIndex(index);
+  };
+
+  const saveElectiveTarget = () => {
+    if (editingElectiveTargetIndex !== null) {
+      setSemesterForm((prev) => ({
+        ...prev,
+        electives_targets: prev.electives_targets.map((item, index) =>
+          index === editingElectiveTargetIndex
+            ? { sheet_name: electiveTargetForm.sheet_name }
+            : item
+        ),
+      }));
+      setEditingElectiveTargetIndex(null);
+      setElectiveTargetForm({ sheet_name: '' });
+    }
+  };
+
+  const cancelElectiveTarget = () => {
+    setEditingElectiveTargetIndex(null);
+    setElectiveTargetForm({ sheet_name: '' });
+  };
+
+  const removeElectiveTarget = (index: number) => {
+    setSemesterForm((prev) => ({
+      ...prev,
+      electives_targets: prev.electives_targets.filter((_, i) => i !== index),
     }));
   };
 
@@ -577,14 +648,14 @@ export function SettingsPage() {
                               placeholder="Sheet name"
                               required
                             />
-                            {sheetNames.length > 0 && (
+                            {coreCoursesSheetNames.length > 0 && (
                               <datalist id={`sheet-names-${index}`}>
-                                {sheetNames.map((name) => (
+                                {coreCoursesSheetNames.map((name) => (
                                   <option key={name} value={name} />
                                 ))}
                               </datalist>
                             )}
-                            {loadingSheetNames && (
+                            {loadingCoreCoursesSheetNames && (
                               <p className="text-xs text-gray-500 mt-1">Loading sheet names...</p>
                             )}
                           </div>
@@ -939,6 +1010,126 @@ export function SettingsPage() {
               </button>
             </div>
 
+            {/* Electives Targets */}
+            <div className="space-y-4">
+              <h4 className="text-md font-medium text-gray-700">
+                Electives Targets
+              </h4>
+
+              {semesterForm.electives_targets.length > 0 && (
+                <div className="space-y-3">
+                  {semesterForm.electives_targets.map((target, index) => (
+                    <div key={index} className="p-3 border border-gray-200 rounded-md">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium text-gray-700">
+                          Target {index + 1}
+                        </span>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => editElectiveTarget(index)}
+                            className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeElectiveTarget(index)}
+                            className="px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+
+                      {editingElectiveTargetIndex === index ? (
+                        <div className="space-y-3">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Sheet Name
+                            </label>
+                            <input
+                              type="text"
+                              list={`elective-sheet-names-${index}`}
+                              value={electiveTargetForm.sheet_name}
+                              onChange={(e) =>
+                                setElectiveTargetForm((prev) => ({
+                                  ...prev,
+                                  sheet_name: e.target.value,
+                                }))
+                              }
+                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              placeholder="Sheet name"
+                              required
+                            />
+                            {electivesSheetNames.length > 0 && (
+                              <datalist id={`elective-sheet-names-${index}`}>
+                                {electivesSheetNames.map((name) => (
+                                  <option key={name} value={name} />
+                                ))}
+                              </datalist>
+                            )}
+                            {loadingElectivesSheetNames && (
+                              <p className="text-xs text-gray-500 mt-1">Loading sheet names...</p>
+                            )}
+                          </div>
+
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={saveElectiveTarget}
+                              className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
+                            >
+                              Save Target
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelElectiveTarget}
+                              className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-gray-600">
+                          <div>
+                            <strong>Sheet:</strong> {target.sheet_name}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {semesterForm.electives_targets.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-4">
+                  No targets configured. Click{' '}
+                  <button
+                    type="button"
+                    onClick={addElectiveTarget}
+                    className="text-primary underline hover:text-secondary"
+                  >
+                    Add Target
+                  </button>{' '}
+                  to add one.
+                </p>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  Click{' '}
+                  <button
+                    type="button"
+                    onClick={addElectiveTarget}
+                    className="text-primary underline hover:text-secondary"
+                  >
+                    Add Target
+                  </button>{' '}
+                  to add another.
+                </p>
+              )}
+            </div>
+
             <div className="flex gap-2">
               <LoadingButton
                 type="submit"
@@ -974,9 +1165,10 @@ export function SettingsPage() {
                   </p>
                 )}
                 {semester.electives_spreadsheet_id && (
-                  <p className="text-sm text-gray-600 mt-1 flex gap-1 min-w-0 overflow-hidden">
-                    <strong className="shrink-0">Electives Spreadsheet:</strong>
-                    <span className="truncate min-w-0" title={semester.electives_spreadsheet_id}>
+                  <p className="text-sm text-gray-600 mt-1 min-w-0 overflow-hidden">
+                    <strong>Electives Spreadsheet:</strong>
+                    <br />
+                    <span className="truncate block" title={semester.electives_spreadsheet_id}>
                       {semester.electives_spreadsheet_id}
                     </span>
                   </p>
@@ -1004,6 +1196,26 @@ export function SettingsPage() {
                                 <strong>Overrides:</strong> {target.override.length}
                               </div>
                             )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                {semester.electives_targets &&
+                  semester.electives_targets.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-200">
+                      <h5 className="text-sm font-medium text-gray-700 mb-2">
+                        Electives Targets ({semester.electives_targets.length}):
+                      </h5>
+                      <div className="space-y-2">
+                        {semester.electives_targets.map((target, index) => (
+                          <div
+                            key={index}
+                            className="text-xs text-gray-600 p-2 bg-gray-100 rounded"
+                          >
+                            <div>
+                              <strong>{target.sheet_name}</strong>
+                            </div>
                           </div>
                         ))}
                       </div>

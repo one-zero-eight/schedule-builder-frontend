@@ -4,6 +4,8 @@ import { SchemaCheckParameters, SchemaIssue } from '../api/types';
 import { APIResponse } from './types';
 
 export const DEFAULT_CHECK_PARAMETERS: SchemaCheckParameters = {
+  care_about_core_courses: true,
+  care_about_electives: true,
   check_room_collisions: true,
   check_teacher_collisions: true,
   check_space_collisions: true,

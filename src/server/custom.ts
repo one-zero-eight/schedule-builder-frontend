@@ -36,3 +36,8 @@ export function getSheetNames(): string[] {
   console.log(sheets);
   return sheets.map(sheet => sheet.getName());
 }
+
+export function getSheetNamesBySpreadsheetId(spreadsheetId: string): string[] {
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  return spreadsheet.getSheets().map(sheet => sheet.getName());
+}

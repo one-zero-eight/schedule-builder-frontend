@@ -15,7 +15,7 @@
     "deploy:dev": "pnpm run build:dev && pnpm run push",
     "deploy": "rimraf dist dist-cp && clasp pull && mv dist dist-cp && pnpm run build && cp dist/innohassle-* dist-cp/ && rimraf dist && mv dist-cp dist && pnpm run push",
     "start": "pnpm run deploy:dev && pnpm run dev",
-    "gen:api": "pnpm exec openapi-typescript https://api.innohassle.ru/schedule-builder/v0/openapi.json --root-types --enum --output ./src/client/api/types.ts"
+    "gen:api": "pnpm exec openapi-typescript --root-types --enum"
   },
   "dependencies": {
     "@babel/preset-env": "^7.24.6",

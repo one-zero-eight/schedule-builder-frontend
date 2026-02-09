@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SchemaLesson } from '../../../api/types';
 import { serverFunctions } from '../../../lib/serverFunctions';
 import { formatStringOrList, formatTimeForMoscow } from '../../../lib/utils';
@@ -7,6 +7,18 @@ import { Spinner } from '../Spinner';
 
 export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
   const [isGoogleBusy, setIsGoogleBusy] = useState(false);
+  const [currentSpreadsheetId, setCurrentSpreadsheetId] = useState<string | null>(null);
+
+  useEffect(() => {
+    serverFunctions.getSpreadsheetID().then(setCurrentSpreadsheetId).catch(() => {});
+  }, []);
+
+  const isExternalSpreadsheet =
+    currentSpreadsheetId != null && lesson.spreadsheet_id !== currentSpreadsheetId;
+
+  function getExternalLink() {
+    return `https://docs.google.com/spreadsheets/d/${lesson.spreadsheet_id}?gid=${lesson.google_sheet_gid}#gid=${lesson.google_sheet_gid}&range=${lesson.a1_range}`;
+  }
 
   async function selectCell(sheetName: string | null, range: string) {
     setIsGoogleBusy(true);
@@ -17,25 +29,42 @@ export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
   return (
     <div className="flex text-blue-400 text-sm">
       {lesson.a1_range && (
-        <button
-          type="button"
-          className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent"
-          onClick={() =>
-            selectCell(lesson.google_sheet_name, lesson.a1_range || '')
-          }
-          title={`Select cell in spreadsheet (${lesson.a1_range} on '${lesson.google_sheet_name}')`}
-        >
-          {isGoogleBusy ? (
-            <Spinner className="text-primary" />
-          ) : (
+        isExternalSpreadsheet ? (
+          <a
+            href={getExternalLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent flex items-center justify-center"
+            title={`Open in external spreadsheet (${lesson.a1_range} on '${lesson.google_sheet_name}')`}
+          >
             <img
               src={selectBtn}
               width={32}
               height={32}
               className="icon-select"
             />
-          )}
-        </button>
+          </a>
+        ) : (
+          <button
+            type="button"
+            className="rounded-lg p-0.5 size-8 shrink-0 bg-surface hover:bg-accent"
+            onClick={() =>
+              selectCell(lesson.google_sheet_name, lesson.a1_range || '')
+            }
+            title={`Select cell in spreadsheet (${lesson.a1_range} on '${lesson.google_sheet_name}')`}
+          >
+            {isGoogleBusy ? (
+              <Spinner className="text-primary" />
+            ) : (
+              <img
+                src={selectBtn}
+                width={32}
+                height={32}
+                className="icon-select"
+              />
+            )}
+          </button>
+        )
       )}
 
       <div className="flex grow flex-col overflow-hidden">
