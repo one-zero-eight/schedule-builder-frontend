@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { SchemaLesson } from '../../../api/types';
 import { serverFunctions } from '../../../lib/serverFunctions';
-import { formatStringOrList, formatTimeForMoscow } from '../../../lib/utils';
+import { formatDateShort, formatStringOrList, formatTimeForMoscow } from '../../../lib/utils';
+import spreadsheetContext from '../../contexts/spreadsheetContext';
 import selectBtn from '../../Search Icon.svg';
 import { Spinner } from '../Spinner';
 
 export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
   const [isGoogleBusy, setIsGoogleBusy] = useState(false);
-  const [currentSpreadsheetId, setCurrentSpreadsheetId] = useState<string | null>(null);
-
-  useEffect(() => {
-    serverFunctions.getSpreadsheetID().then(setCurrentSpreadsheetId).catch(() => {});
-  }, []);
+  const currentSpreadsheetId = useContext(spreadsheetContext);
 
   const isExternalSpreadsheet =
     currentSpreadsheetId != null && lesson.spreadsheet_id !== currentSpreadsheetId;
@@ -70,7 +67,11 @@ export function LessonBlock({ lesson }: { lesson: SchemaLesson }) {
       <div className="flex grow flex-col overflow-hidden">
         <p>{lesson.lesson_name}</p>
         <p className="text-xs select-text line-clamp-1">
-          {lesson.weekday} {formatTimeForMoscow(lesson.start_time)}-
+          {lesson.date_on && lesson.date_on.length > 0
+            ? lesson.date_on.map(formatDateShort).join(', ')
+            : lesson.weekday}
+          <span className="inline-block w-3" />
+          {formatTimeForMoscow(lesson.start_time)}-
           {formatTimeForMoscow(lesson.end_time)} (
           {formatStringOrList(lesson.room)})
         </p>

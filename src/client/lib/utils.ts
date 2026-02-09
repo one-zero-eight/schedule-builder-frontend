@@ -21,6 +21,17 @@ export function formatTimeForMoscow(timeString: string): string {
   return `${hours}:${minutes}`;
 }
 
+const SHORT_WEEKDAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const SHORT_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export function formatDateShort(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  const wd = SHORT_WEEKDAYS[date.getDay()];
+  const mo = SHORT_MONTHS[date.getMonth()];
+  return `${wd}, ${mo} ${day}`;
+}
+
 export function formatStringOrList(
   input: string | string[] | null,
   separator: string = ' / '
